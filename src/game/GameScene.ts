@@ -76,7 +76,7 @@ export class GameScene extends Phaser.Scene {
     this.load.image('p2', '/assets/p2.png');
     this.load.image('p3', '/assets/p3.png');
     this.load.image('p4', '/assets/p4.png');
-    this.load.image('p5', '/assets/p5.jpg');
+    this.load.image('p5', '/assets/p5.png');
     this.load.image('blast_effect', '/assets/blast_effect.jpg');
     this.load.image('ultimate_blast', '/assets/ultimate_blast.jpg');
     this.load.image('ruined_city_bg', '/assets/ruined_city_bg.jpg');
