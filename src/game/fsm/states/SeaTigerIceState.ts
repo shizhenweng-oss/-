@@ -6,9 +6,12 @@ export class SeaTigerIceState implements IState {
   readonly type = CharacterStateType.SKILL_ICE;
   private timer = 0;
 
+  private trapSpawned = false;
+
   enter(ctx: BaseCharacter): void {
     ctx.setVelocityX(0);
     this.timer = 0;
+    this.trapSpawned = false;
     ctx.setPose('punch');
     ctx.setBodyTint(0x00aaff); // Ice color
     ctx.emitStateEvent();
@@ -20,36 +23,53 @@ export class SeaTigerIceState implements IState {
     
     if (this.timer < 100) {
       // Startup
-    } else if (this.timer < 3000) {
-      // Active: Freeze attack (lasts 3 seconds)
-      if (!ctx.activeHitbox) {
-        ctx.spawnHitbox(120, 200, 200);
-        ctx.stateData.currentHitProps = {
-          damage: 15,
-          pushbackSpeed: 0, // Keep them in place
-          causesKnockdown: false,
-          freezeDuration: 3000 // 3 seconds freeze
-        };
+    } else if (this.timer < 500) {
+      // Active: Spawn Ice Trap
+      if (!this.trapSpawned) {
+        this.trapSpawned = true;
         
-        // Ice smash visuals
         const dir = ctx.facingRight ? 1 : -1;
         const ice = ctx.scene.add.sprite(ctx.rect.x + 100 * dir, ctx.rect.y, 'snow_pole');
         ice.setOrigin(0.5, 1);
         ice.setDepth(15);
-        ctx.scene.tweens.add({ targets: ice, alpha: 0, delay: 2500, duration: 500, onComplete: () => ice.destroy() });
+        
+        ctx.scene.physics.add.existing(ice, true); // true for static body
+        const body = ice.body as Phaser.Physics.Arcade.StaticBody;
+        body.setSize(200, 200);
+        
+        let trapActive = true;
+        
+        if (ctx.opponent) {
+           const collider = ctx.scene.physics.add.overlap(ice, ctx.opponent.rect, () => {
+              if (trapActive && ctx.opponent && ctx.opponent.hp > 0) {
+                 trapActive = false; // Only hit once
+                 ctx.opponent.takeHit({
+                    damage: 15,
+                    pushbackSpeed: 0,
+                    causesKnockdown: false,
+                    freezeDuration: 3000
+                 }, dir);
+              }
+           });
+           
+           ctx.scene.tweens.add({ targets: ice, alpha: 0, delay: 2500, duration: 500, onComplete: () => {
+              collider.destroy();
+              ice.destroy();
+           } });
+        } else {
+           ctx.scene.tweens.add({ targets: ice, alpha: 0, delay: 2500, duration: 500, onComplete: () => {
+              ice.destroy();
+           } });
+        }
         
         ctx.scene.cameras.main.shake(200, 0.015);
       }
-    } else if (this.timer < 3300) {
-      // Recovery
-      ctx.destroyHitbox();
     } else {
       ctx.fsm.transition(CharacterStateType.IDLE);
     }
   }
 
   exit(ctx: BaseCharacter): void {
-    ctx.destroyHitbox();
     ctx.setBodyTint(ctx.baseColor);
   }
 }
