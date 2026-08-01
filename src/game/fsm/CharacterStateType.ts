@@ -23,6 +23,8 @@ export const CharacterStateType = {
   SKILL_HEAL: 'SKILL_HEAL',
   /** Ultimate Attack */
   ULTIMATE_ATTACK: 'ULTIMATE_ATTACK',
+  /** Hidden Ultimate Attack (1M Power) */
+  ULTIMATE_HIDDEN: 'ULTIMATE_HIDDEN',
 
   // ── Five Elements Branching States ─────────────────────────────────────────
   SKILL_WIND: 'SKILL_WIND',

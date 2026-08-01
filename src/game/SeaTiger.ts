@@ -10,6 +10,7 @@ import { SeaTigerFireState } from './fsm/states/SeaTigerFireState';
 import { SeaTigerBuffState } from './fsm/states/SeaTigerBuffState';
 import { SeaTigerBlinkState } from './fsm/states/SeaTigerBlinkState';
 import { SeaTigerBackDashProjectileState } from './fsm/states/SeaTigerBackDashProjectileState';
+import { SeaTigerUltimateHiddenState } from './fsm/states/SeaTigerUltimateHiddenState';
 
 export class SeaTiger extends BaseCharacter {
   
@@ -36,6 +37,7 @@ export class SeaTiger extends BaseCharacter {
       .addState(new SeaTigerFireState())
       .addState(new SeaTigerBuffState())
       .addState(new SeaTigerBlinkState())
-      .addState(new SeaTigerBackDashProjectileState());
+      .addState(new SeaTigerBackDashProjectileState())
+      .addState(new SeaTigerUltimateHiddenState());
   }
 }

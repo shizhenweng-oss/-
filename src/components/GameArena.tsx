@@ -60,8 +60,11 @@ export const GameArena: React.FC = () => {
   const [roundRunning, setRoundRunning] = useState(true);
 
   // ── Narration overlay ─────────────────────────────────────────────────────
-  const [narration, setNarration] = useState<{ text: string, visible: boolean, imageUrl?: string }>({ text: '', visible: false });
+  const [narration, setNarration] = useState({ text: '', visible: false, imageUrl: '' });
   const [displayedNarration, setDisplayedNarration] = useState('');
+  
+  // Ultimate Cinematic State
+  const [ultimatePhase, setUltimatePhase] = useState<number>(0);
 
   // ── Cut-in Text & Buffs ───────────────────────────────────────────────────
   const [cutins, setCutins] = useState<{ id: number; text: string }[]>([]);
@@ -97,7 +100,7 @@ export const GameArena: React.FC = () => {
     };
 
     const onNarration = ({ text, imageUrl }: { text: string, imageUrl?: string }) => {
-      setNarration({ text, visible: true, imageUrl });
+      setNarration({ text, visible: true, imageUrl: imageUrl || '' });
       setDisplayedNarration('');
     };
 
@@ -113,6 +116,10 @@ export const GameArena: React.FC = () => {
       }
     };
 
+    const onCinematic = ({ phase }: { phase: number }) => {
+      setUltimatePhase(phase);
+    };
+
     EventBus.on(EVENTS.PLAYER_HP_CHANGED,    onHp);
     EventBus.on(EVENTS.PLAYER_FORCE_CHANGED, onForce);
     EventBus.on(EVENTS.PLAYER_FORCE_OVERLOAD, onOverload);
@@ -120,6 +127,7 @@ export const GameArena: React.FC = () => {
     EventBus.on(EVENTS.PLAY_NARRATION,       onNarration);
     EventBus.on(EVENTS.UI_TEXT_CUTIN,        onCutin);
     EventBus.on(EVENTS.UI_BUFF_EFFECT,       onBuff);
+    EventBus.on(EVENTS.UI_CINEMATIC_ULTIMATE, onCinematic);
 
     return () => {
       EventBus.off(EVENTS.PLAYER_HP_CHANGED,    onHp);
@@ -129,6 +137,7 @@ export const GameArena: React.FC = () => {
       EventBus.off(EVENTS.PLAY_NARRATION,       onNarration);
       EventBus.off(EVENTS.UI_TEXT_CUTIN,        onCutin);
       EventBus.off(EVENTS.UI_BUFF_EFFECT,       onBuff);
+      EventBus.off(EVENTS.UI_CINEMATIC_ULTIMATE, onCinematic);
     };
   }, []);
 
@@ -142,7 +151,7 @@ export const GameArena: React.FC = () => {
       index++;
       if (index >= narration.text.length) {
         clearInterval(interval);
-        setTimeout(() => setNarration({ text: '', visible: false, imageUrl: undefined }), 3000); // Hide after 3s
+        setTimeout(() => setNarration({ text: '', visible: false, imageUrl: '' }), 3000); // Hide after 3s
       }
     }, 50);
 
@@ -279,6 +288,91 @@ export const GameArena: React.FC = () => {
             </div>
           ))}
         </div>
+
+        {/* ULTIMATE CINEMATIC OVERLAY */}
+        {ultimatePhase > 0 && (
+          <div className="pointer-events-none absolute inset-0 z-50 flex items-center justify-center overflow-hidden">
+            {/* Phase 1: Text scale up */}
+            {ultimatePhase === 1 && (
+              <div 
+                className="text-red-600 font-black italic text-center whitespace-pre-wrap leading-tight drop-shadow-[0_0_20px_rgba(255,0,0,1)]"
+                style={{ 
+                  animation: 'cinematic-scale-up 4s ease-in-out forwards',
+                  WebkitTextStroke: '2px #000',
+                  fontSize: '4rem'
+                }}
+              >
+                他媽的…現在，已是去盡的時候。<br/>已他媽不能再忍耐！<br/>100萬匹力量…出來！！！
+              </div>
+            )}
+            
+            {/* Phase 2: Absolute Black, Marks, Crack, Text */}
+            {ultimatePhase === 2 && (
+              <div className="absolute inset-0 bg-black flex flex-col items-center justify-center">
+                {/* 3 War Marks */}
+                <div className="absolute flex gap-8 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                  <div className="w-4 bg-red-600" style={{ animation: 'war-mark 3.5s ease-out forwards', boxShadow: '0 0 20px #ff0000' }}></div>
+                  <div className="w-4 bg-red-600" style={{ animation: 'war-mark 3.5s ease-out forwards 0.2s', boxShadow: '0 0 20px #ff0000' }}></div>
+                  <div className="w-4 bg-red-600" style={{ animation: 'war-mark 3.5s ease-out forwards 0.4s', boxShadow: '0 0 20px #ff0000' }}></div>
+                </div>
+                
+                {/* Crack flash */}
+                <div 
+                  className="absolute inset-0 bg-white z-20 mix-blend-overlay"
+                  style={{ animation: 'screen-crack 3s step-end forwards 1s' }}
+                />
+                
+                {/* Main Impact Text */}
+                <div 
+                  className="z-30 text-red-500 font-black italic text-8xl text-center leading-none"
+                  style={{ 
+                    animation: 'ultimate-fade-text 3s ease-in-out forwards 1.2s',
+                    textShadow: '10px 10px 0 #000, 0 0 50px #ff0000',
+                    WebkitTextStroke: '4px #fff'
+                  }}
+                >
+                  战他娘亲<br/>一百万匹力量<br/>给我破呀！！！
+                </div>
+              </div>
+            )}
+            
+            {/* Phase 3: Survival Ending */}
+            {ultimatePhase === 3 && (
+              <div className="absolute inset-0 bg-black flex items-center justify-center">
+                {/* War Marks */}
+                <div className="absolute flex gap-8 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                  <div className="w-4 bg-red-600" style={{ animation: 'war-mark 3.5s ease-out forwards', boxShadow: '0 0 20px #ff0000' }}></div>
+                  <div className="w-4 bg-red-600" style={{ animation: 'war-mark 3.5s ease-out forwards 0.2s', boxShadow: '0 0 20px #ff0000' }}></div>
+                  <div className="w-4 bg-red-600" style={{ animation: 'war-mark 3.5s ease-out forwards 0.4s', boxShadow: '0 0 20px #ff0000' }}></div>
+                </div>
+                <div 
+                  className="z-30 text-red-600 font-black italic text-7xl text-center"
+                  style={{ 
+                    animation: 'ultimate-fade-text 3s ease-in-out forwards 1s',
+                    textShadow: '0 0 30px #ff0000'
+                  }}
+                >
+                  次男 爹来杀你了。
+                </div>
+              </div>
+            )}
+            
+            {/* Phase 4: Death Ending */}
+            {ultimatePhase === 4 && (
+              <div className="absolute inset-0 bg-black flex items-center justify-center">
+                <div 
+                  className="z-30 text-red-800 font-serif italic text-4xl text-center whitespace-pre-wrap leading-relaxed"
+                  style={{ 
+                    animation: 'ultimate-fade-text 4s ease-in-out forwards 1s',
+                    textShadow: '0 0 20px #aa0000'
+                  }}
+                >
+                  小瞳…我…未能做到。<br/>首男…我对你不起…
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
       </div>
     </div>

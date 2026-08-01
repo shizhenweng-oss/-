@@ -78,6 +78,34 @@ body {
   animation: UIOverloadPulse 0.2s infinite;
 }
 
+@keyframes cinematic-scale-up {
+  0% { transform: scale(0.2); opacity: 0; }
+  20% { transform: scale(1); opacity: 1; }
+  80% { transform: scale(1.5); opacity: 1; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+@keyframes screen-crack {
+  0% { clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%); opacity: 0; }
+  10% { clip-path: polygon(50% 50%, 10% 20%, 90% 10%, 80% 80%); opacity: 1; }
+  20% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); opacity: 1; }
+  100% { opacity: 0; display: none; }
+}
+
+@keyframes war-mark {
+  0% { height: 0%; opacity: 0; transform: translateY(-50px) rotate(-10deg); }
+  20% { height: 100%; opacity: 1; transform: translateY(0) rotate(-10deg); }
+  80% { height: 100%; opacity: 1; transform: translateY(0) rotate(-10deg); }
+  100% { height: 100%; opacity: 0; transform: translateY(0) rotate(-10deg); }
+}
+
+@keyframes ultimate-fade-text {
+  0% { opacity: 0; transform: translateY(20px); filter: blur(10px); }
+  20% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  80% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  100% { opacity: 0; transform: translateY(-20px); filter: blur(10px); }
+}
+
 .overload-value {
   color: #fff;
   font-family: 'Arial Black', Impact, sans-serif;

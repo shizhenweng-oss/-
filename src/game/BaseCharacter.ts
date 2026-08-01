@@ -130,7 +130,8 @@ export class BaseCharacter {
   canInstantBranch = false;
 
   // Ultimate Trigger Properties
-  private ultimatePresses: number[] = [];
+  protected ultimatePresses: number[] = [];
+  protected skill2HoldTime: number = 0;
   
   // Hold Mechanic
   attackHoldTime = 0;
@@ -795,6 +796,17 @@ export class BaseCharacter {
       this.fsm.transition(CharacterStateType.SKILL_HEAL);
       return true;
     }
+    
+    if (this.input.skill2Hold) {
+      if (this.skill2HoldTime > 800 && this.hp <= this.maxHp * 0.2 && this.fsm.hasState(CharacterStateType.ULTIMATE_HIDDEN)) {
+         this.fsm.transition(CharacterStateType.ULTIMATE_HIDDEN);
+         this.skill2HoldTime = 0;
+         return true;
+      }
+    } else {
+      this.skill2HoldTime = 0;
+    }
+
     if (this.input.attack) {
       if (this.fsm.hasState(CharacterStateType.COMBO)) {
         this.fsm.transition(CharacterStateType.COMBO);
@@ -808,6 +820,12 @@ export class BaseCharacter {
 
   update(rawDelta: number): void {
     const delta = this.ignoreTimeScale ? rawDelta : rawDelta * this.scene.time.timeScale;
+    
+    if (this.input.skill2Hold) {
+       this.skill2HoldTime += delta;
+    } else {
+       this.skill2HoldTime = 0;
+    }
     
     if (this.input.ultimate) {
       this.ultimatePresses.push(this.scene.time.now);
