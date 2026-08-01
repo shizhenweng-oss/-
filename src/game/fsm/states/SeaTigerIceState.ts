@@ -29,7 +29,7 @@ export class SeaTigerIceState implements IState {
         this.trapSpawned = true;
         
         const dir = ctx.facingRight ? 1 : -1;
-        const targetX = ctx.rect.x + 100 * dir;
+        const targetX = ctx.rect.x + 220 * dir; // Moved forward by ~1 body length
         const targetY = ctx.rect.y;
         
         // Visual Sprite
