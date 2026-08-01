@@ -90,7 +90,15 @@ export class GameScene extends Phaser.Scene {
     // Elemental Variations
     this.load.image('snow_pole', '/assets/snow_pole.png');
     this.load.image('fire_pole', '/assets/fire_pole.png');
-    this.load.image('wind_pole', '/assets/wind_pole.png');
+    this.load.image('wind_pole', 'assets/wind_pole.png');
+    
+    // Ultimate Cinematic Assets
+    this.load.image('sea_tiger_rib_burst', 'assets/sea_tiger_rib_burst.png');
+    this.load.image('war_stripes', 'assets/war_stripes.png');
+    this.load.image('1m_horsepower', 'assets/1m_horsepower.jpg');
+    this.load.image('black_face', 'assets/black_face.png');
+
+    // UI Sounds
     this.load.image('seatiger_ultimate', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAAAAXNSR0IArs4c6QAAAGRJREFUeF7t0AENAAAMAqBv5t/u0h0o2EM1SVq38gAEMoGg2L29AQoB+gQygb772XmAAoE+gUyg7352HqBAoE8gE+i7n50HKBDoE8gE+u5n5wEKBPoEMoG++9l5gAKBPoFM4G93P1488AE5k4HPAAAAAElFTkSuQmCC');
   }
 

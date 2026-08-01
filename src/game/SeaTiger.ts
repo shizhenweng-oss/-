@@ -18,6 +18,7 @@ export class SeaTiger extends BaseCharacter {
   seaTigerData = {
     comboIndex: 0,
     comboBuffered: false,
+    isRibBurstForm: false,
     skill1Timer: 0,
     skill1HitRegistered: false,
   };

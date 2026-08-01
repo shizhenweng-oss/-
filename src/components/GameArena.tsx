@@ -178,6 +178,43 @@ export const GameArena: React.FC = () => {
           0% { transform: scale(1); opacity: 1; }
           100% { transform: scale(0.8) translateY(-50px); opacity: 0; }
         }
+        @keyframes cinematic-scale-up {
+          0% { transform: scale(0.5); opacity: 0; }
+          20% { transform: scale(1); opacity: 1; }
+          80% { transform: scale(1.5); opacity: 1; }
+          100% { transform: scale(2); opacity: 0; }
+        }
+        @keyframes war-mark {
+          0% { height: 0vh; opacity: 1; }
+          10% { height: 100vh; opacity: 1; }
+          80% { height: 100vh; opacity: 1; }
+          100% { height: 100vh; opacity: 0; }
+        }
+        @keyframes screen-crack {
+          0% { opacity: 0; }
+          10% { opacity: 1; }
+          20% { opacity: 0; }
+          30% { opacity: 0.8; }
+          100% { opacity: 0; }
+        }
+        @keyframes image-zoom-fade {
+          0% { transform: scale(1.2); opacity: 0; }
+          10% { transform: scale(1); opacity: 1; }
+          80% { transform: scale(1.05); opacity: 1; }
+          100% { transform: scale(1.1); opacity: 0; }
+        }
+        @keyframes ultimate-fade-text {
+          0% { transform: translateY(20px); opacity: 0; }
+          10% { transform: translateY(0); opacity: 1; }
+          80% { transform: translateY(0); opacity: 1; }
+          100% { transform: translateY(-20px); opacity: 0; }
+        }
+        @keyframes slow-fade-out {
+          0% { opacity: 0; }
+          20% { opacity: 1; }
+          80% { opacity: 1; }
+          100% { opacity: 0; }
+        }
       `}</style>
       {/* Phaser canvas (aria-hidden — HUD is the accessible layer) */}
       <div id="phaser-mount" ref={phaserMount} aria-hidden="true" />
@@ -324,9 +361,9 @@ export const GameArena: React.FC = () => {
                 
                 {/* 1 Million Power Image */}
                 <div 
-                  className="absolute inset-0 z-25 bg-cover bg-center mix-blend-screen opacity-0"
+                  className="absolute inset-0 z-25 bg-contain bg-no-repeat bg-center mix-blend-screen opacity-0"
                   style={{ 
-                    backgroundImage: 'url(/assets/ultimate_blast.jpg)',
+                    backgroundImage: 'url(/assets/1m_horsepower.jpg)',
                     animation: 'image-zoom-fade 3s ease-out forwards 1.2s'
                   }}
                 />
@@ -355,12 +392,11 @@ export const GameArena: React.FC = () => {
                   <div className="w-4 bg-red-600" style={{ animation: 'war-mark 3.5s ease-out forwards 0.4s', boxShadow: '0 0 20px #ff0000' }}></div>
                 </div>
                 
-                {/* Dark Face Image (Fallback using avatar + CSS filters) */}
+                {/* Dark Face Image */}
                 <div 
-                  className="absolute inset-0 z-20 bg-cover bg-center opacity-0"
+                  className="absolute inset-0 z-20 bg-contain bg-no-repeat bg-center opacity-0"
                   style={{ 
-                    backgroundImage: 'url(/assets/seatiger_avatar.png)',
-                    filter: 'brightness(0.3) grayscale(0.8) contrast(1.5)',
+                    backgroundImage: 'url(/assets/black_face.png)',
                     animation: 'image-zoom-fade 4s ease-out forwards 0.5s'
                   }}
                 />
