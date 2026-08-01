@@ -422,6 +422,27 @@ body {
   from { opacity: 0.4; }
   to   { opacity: 1; }
 }
+@keyframes screen-crack {
+  0% { opacity: 0; clip-path: polygon(50% 50%, 50% 50%, 50% 50%); }
+  5% { opacity: 1; clip-path: polygon(0% 0%, 100% 0%, 50% 50%, 0% 100%, 100% 100%); background-color: white; }
+  10% { opacity: 1; clip-path: polygon(10% 0%, 90% 0%, 40% 60%, 10% 100%, 90% 100%); background-color: transparent; border: 10px solid white; }
+  15% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes image-zoom-fade {
+  0% { transform: scale(1.5); opacity: 0; filter: brightness(2) contrast(1.5); }
+  10% { transform: scale(1); opacity: 1; filter: brightness(1) contrast(1.1); }
+  90% { transform: scale(1.05); opacity: 1; filter: brightness(1) contrast(1); }
+  100% { transform: scale(1.1); opacity: 0; }
+}
+
+@keyframes slow-fade-out {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  70% { opacity: 1; text-shadow: 0 0 20px #aa0000; }
+  100% { opacity: 0; text-shadow: 0 0 0px #000000; }
+}
 
 /* ─── Combo / Damage Number flash (utility) ─────────────── */
 @keyframes damage-pop {

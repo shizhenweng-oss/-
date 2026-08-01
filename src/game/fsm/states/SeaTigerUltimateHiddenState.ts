@@ -82,8 +82,8 @@ export class SeaTigerUltimateHiddenState implements IState {
     } 
     else if (this.phase === 2) {
       // Phase 2: Wait for React Cinematic to finish playing before Impact
-      // React cinematic takes about 4 seconds
-      if (this.timer >= 4000) {
+      // React cinematic takes about 4.5 seconds
+      if (this.timer >= 4500) {
         this.phase = 3;
         this.timer = 0;
         
@@ -140,9 +140,14 @@ export class SeaTigerUltimateHiddenState implements IState {
     else if (this.phase === 4) {
        // The game effectively ends here (one or both are dead).
        // We can transition to IDLE or stay in knockdown depending on if we died.
-       if (this.timer > 3000) {
+       // The CSS animations take up to 6 seconds to complete.
+       if (this.timer > 6500) {
           EventBus.emit(EVENTS.UI_CINEMATIC_ULTIMATE, { phase: 0 }); // clear
-          ctx.fsm.transition(CharacterStateType.IDLE);
+          if (ctx.hp > 0) {
+            ctx.fsm.transition(CharacterStateType.IDLE);
+          } else {
+            // Stay down if dead
+          }
        }
     }
   }

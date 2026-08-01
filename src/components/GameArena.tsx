@@ -322,9 +322,18 @@ export const GameArena: React.FC = () => {
                   style={{ animation: 'screen-crack 3s step-end forwards 1s' }}
                 />
                 
+                {/* 1 Million Power Image */}
+                <div 
+                  className="absolute inset-0 z-25 bg-cover bg-center mix-blend-screen opacity-0"
+                  style={{ 
+                    backgroundImage: 'url(/assets/ultimate_blast.jpg)',
+                    animation: 'image-zoom-fade 3s ease-out forwards 1.2s'
+                  }}
+                />
+                
                 {/* Main Impact Text */}
                 <div 
-                  className="z-30 text-red-500 font-black italic text-8xl text-center leading-none"
+                  className="z-30 text-red-500 font-black italic text-8xl text-center leading-none opacity-0"
                   style={{ 
                     animation: 'ultimate-fade-text 3s ease-in-out forwards 1.2s',
                     textShadow: '10px 10px 0 #000, 0 0 50px #ff0000',
@@ -345,8 +354,19 @@ export const GameArena: React.FC = () => {
                   <div className="w-4 bg-red-600" style={{ animation: 'war-mark 3.5s ease-out forwards 0.2s', boxShadow: '0 0 20px #ff0000' }}></div>
                   <div className="w-4 bg-red-600" style={{ animation: 'war-mark 3.5s ease-out forwards 0.4s', boxShadow: '0 0 20px #ff0000' }}></div>
                 </div>
+                
+                {/* Dark Face Image (Fallback using avatar + CSS filters) */}
                 <div 
-                  className="z-30 text-red-600 font-black italic text-7xl text-center"
+                  className="absolute inset-0 z-20 bg-cover bg-center opacity-0"
+                  style={{ 
+                    backgroundImage: 'url(/assets/seatiger_avatar.png)',
+                    filter: 'brightness(0.3) grayscale(0.8) contrast(1.5)',
+                    animation: 'image-zoom-fade 4s ease-out forwards 0.5s'
+                  }}
+                />
+                
+                <div 
+                  className="z-30 text-red-600 font-black italic text-7xl text-center opacity-0"
                   style={{ 
                     animation: 'ultimate-fade-text 3s ease-in-out forwards 1s',
                     textShadow: '0 0 30px #ff0000'
@@ -359,12 +379,22 @@ export const GameArena: React.FC = () => {
             
             {/* Phase 4: Death Ending */}
             {ultimatePhase === 4 && (
-              <div className="absolute inset-0 bg-black flex items-center justify-center">
+              <div className="absolute inset-0 bg-black flex flex-col items-center justify-center">
+                {/* War Marks */}
+                <div className="absolute flex gap-8 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                  <div className="w-4 bg-red-600" style={{ animation: 'war-mark 1s ease-out forwards', boxShadow: '0 0 20px #ff0000' }}></div>
+                  <div className="w-4 bg-red-600" style={{ animation: 'war-mark 1s ease-out forwards 0.2s', boxShadow: '0 0 20px #ff0000' }}></div>
+                  <div className="w-4 bg-red-600" style={{ animation: 'war-mark 1s ease-out forwards 0.4s', boxShadow: '0 0 20px #ff0000' }}></div>
+                </div>
+                {/* Crack flash */}
                 <div 
-                  className="z-30 text-red-800 font-serif italic text-4xl text-center whitespace-pre-wrap leading-relaxed"
+                  className="absolute inset-0 bg-white z-20 mix-blend-overlay"
+                  style={{ animation: 'screen-crack 1s step-end forwards 0.5s' }}
+                />
+                <div 
+                  className="z-30 text-red-800 font-serif italic text-4xl text-center whitespace-pre-wrap leading-relaxed opacity-0"
                   style={{ 
-                    animation: 'ultimate-fade-text 4s ease-in-out forwards 1s',
-                    textShadow: '0 0 20px #aa0000'
+                    animation: 'slow-fade-out 5s ease-in-out forwards 1.5s',
                   }}
                 >
                   小瞳…我…未能做到。<br/>首男…我对你不起…
