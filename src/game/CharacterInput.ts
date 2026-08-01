@@ -18,6 +18,10 @@ export interface CharacterInput {
   skill2:     boolean;
   /** Skill 2 hold state */
   skill2Hold: boolean;
+  /** Heal key — JustDown */
+  heal:       boolean;
+  /** Heal key — Hold state */
+  healHold:   boolean;
   /** Ultimate key — JustDown */
   ultimate:   boolean;
   /** Q key — Hold state for chords */
@@ -41,6 +45,8 @@ export const emptyInput = (): CharacterInput => ({
   skill1:     false,
   skill2:     false,
   skill2Hold: false,
+  heal:       false,
+  healHold:   false,
   ultimate:   false,
   keyQ:       false,
   keyE:       false,

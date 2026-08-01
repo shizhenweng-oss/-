@@ -798,7 +798,7 @@ export class BaseCharacter {
         return true;
       }
     }
-    if (this.input.skill2 && this.magneticForce > 0 && this.fsm.hasState(CharacterStateType.SKILL_HEAL)) {
+    if (this.input.heal && this.magneticForce > 0 && this.fsm.hasState(CharacterStateType.SKILL_HEAL)) {
       this.fsm.transition(CharacterStateType.SKILL_HEAL);
       return true;
     }

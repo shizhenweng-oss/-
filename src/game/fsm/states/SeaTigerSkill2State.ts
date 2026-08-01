@@ -52,7 +52,7 @@ export class SeaTigerSkill2State implements IState {
   }
 
   update(ctx: BaseCharacter, delta: number): void {
-    if (!ctx.input.skill2Hold || ctx.magneticForce <= 0) {
+    if (!ctx.input.healHold || ctx.magneticForce <= 0) {
       ctx.fsm.transition(CharacterStateType.IDLE);
       return;
     }

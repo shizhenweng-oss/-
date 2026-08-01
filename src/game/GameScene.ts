@@ -36,6 +36,7 @@ export class GameScene extends Phaser.Scene {
     sub:    Phaser.Input.Keyboard.Key; // F 
     skill1: Phaser.Input.Keyboard.Key; // C
     skill2: Phaser.Input.Keyboard.Key; // X
+    heal:   Phaser.Input.Keyboard.Key; // H
     ultimate: Phaser.Input.Keyboard.Key; // E
     keyQ: Phaser.Input.Keyboard.Key;
     keyE: Phaser.Input.Keyboard.Key;
@@ -51,6 +52,7 @@ export class GameScene extends Phaser.Scene {
     sub:    Phaser.Input.Keyboard.Key; // P
     skill1: Phaser.Input.Keyboard.Key; // K
     skill2: Phaser.Input.Keyboard.Key; // I
+    heal:   Phaser.Input.Keyboard.Key; // M
     ultimate: Phaser.Input.Keyboard.Key; // L
     keyQ: Phaser.Input.Keyboard.Key;
     keyE: Phaser.Input.Keyboard.Key;
@@ -183,6 +185,7 @@ export class GameScene extends Phaser.Scene {
         sub:    this.input.keyboard.addKey(KC.F),
         skill1: this.input.keyboard.addKey(KC.C),
         skill2: this.input.keyboard.addKey(KC.X),
+        heal:   this.input.keyboard.addKey(KC.H),
         ultimate: this.input.keyboard.addKey(KC.E),
         keyQ: this.input.keyboard.addKey(KC.Q),
         keyE: this.input.keyboard.addKey(KC.E), // Overlaps with ultimate on purpose
@@ -199,6 +202,7 @@ export class GameScene extends Phaser.Scene {
         sub:    this.input.keyboard.addKey(KC.P),
         skill1: this.input.keyboard.addKey(KC.K),
         skill2: this.input.keyboard.addKey(KC.I),
+        heal:   this.input.keyboard.addKey(KC.M),
         ultimate: this.input.keyboard.addKey(KC.L),
         keyQ: this.input.keyboard.addKey(KC.U),
         keyE: this.input.keyboard.addKey(KC.I), // Overlaps with skill2 (I), let's use O? Oh O is attack. Let's use J.
@@ -274,6 +278,8 @@ export class GameScene extends Phaser.Scene {
         skill1:     Phaser.Input.Keyboard.JustDown(keys.skill1),
         skill2:     Phaser.Input.Keyboard.JustDown(keys.skill2),
         skill2Hold: keys.skill2.isDown,
+        heal:       Phaser.Input.Keyboard.JustDown(keys.heal),
+        healHold:   keys.heal.isDown,
         ultimate:   Phaser.Input.Keyboard.JustDown(keys.ultimate),
         keyQ:       keys.keyQ.isDown,
         keyE:       keys.keyE.isDown,
