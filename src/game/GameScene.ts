@@ -281,7 +281,7 @@ export class GameScene extends Phaser.Scene {
         moveDown:   keys.down.isDown,
         moveLeft:   keys.left.isDown,
         moveRight:  keys.right.isDown,
-        jump:       Phaser.Input.Keyboard.JustDown(keys.jump),
+        jump:       keys.jump.isDown,
         attack:     Phaser.Input.Keyboard.JustDown(keys.attack),
         attackHold: keys.attack.isDown,
         substitute: Phaser.Input.Keyboard.JustDown(keys.sub),

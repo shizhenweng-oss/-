@@ -676,16 +676,33 @@ export class BaseCharacter {
 
   private updateZPhysics(delta: number): void {
     const dt = delta / 1000;
-    // Apply gravity to vz if in air
-    if (this.z > 0 || this.vz > 0) {
-      this.vz -= 1500 * dt; // Gravity
-      this.z += this.vz * dt;
+    
+    // Flight mechanic (hold jump)
+    if (this.input.jump && 
+        this.fsm.currentType !== CharacterStateType.HITSTUN && 
+        this.fsm.currentType !== CharacterStateType.KNOCKDOWN && 
+        this.fsm.currentType !== CharacterStateType.FROZEN) {
+       
+       const maxZ = this.scene.scale.height - 250; // Keep on screen
+       if (this.z < maxZ) {
+          this.vz = 800; // Fly up
+       } else {
+          this.vz = 0; // Hover
+          this.z = maxZ;
+       }
+    } else {
+       // Apply gravity if in air
+       if (this.z > 0 || this.vz > 0) {
+         this.vz -= 1500 * dt; // Gravity
+       }
+    }
+    
+    this.z += this.vz * dt;
 
-      // Ground collision
-      if (this.z <= 0) {
-        this.z = 0;
-        this.vz = 0;
-      }
+    // Ground collision
+    if (this.z <= 0) {
+      this.z = 0;
+      if (this.vz < 0) this.vz = 0;
     }
   }
 
@@ -760,12 +777,6 @@ export class BaseCharacter {
   handleActionInput(): boolean {
     // If we're frozen, we can't do anything!
     if (this.fsm.currentType === CharacterStateType.FROZEN) return false;
-
-    // Jumping
-    if (this.input.jump && this.z === 0) {
-      this.vz = 1500; // Jump velocity
-      this.z = 1;
-    }
 
     // Keep track of recent ultimate presses
     this.ultimatePresses = this.ultimatePresses.filter(t => this.scene.time.now - t <= 1500);
