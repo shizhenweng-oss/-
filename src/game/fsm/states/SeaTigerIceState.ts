@@ -36,7 +36,7 @@ export class SeaTigerIceState implements IState {
         const ice = ctx.scene.add.sprite(targetX, targetY, 'snow_pole');
         ice.setOrigin(0.5, 1);
         ice.setScale(0.7); // Scaled down to fit hitbox
-        ice.setFlipX(!ctx.facingRight); // Mirror image
+        ice.setFlipX(ctx.facingRight); // Mirror image since the original texture is reversed
         ice.setDepth(15);
         
         // Precise Logical Hitbox
