@@ -29,18 +29,26 @@ export class SeaTigerIceState implements IState {
         this.trapSpawned = true;
         
         const dir = ctx.facingRight ? 1 : -1;
-        const ice = ctx.scene.add.sprite(ctx.rect.x + 100 * dir, ctx.rect.y, 'snow_pole');
+        const targetX = ctx.rect.x + 100 * dir;
+        const targetY = ctx.rect.y;
+        
+        // Visual Sprite
+        const ice = ctx.scene.add.sprite(targetX, targetY, 'snow_pole');
         ice.setOrigin(0.5, 1);
+        ice.setScale(0.7); // Scaled down to fit hitbox
         ice.setDepth(15);
         
-        ctx.scene.physics.add.existing(ice, true); // true for static body
-        const body = ice.body as Phaser.Physics.Arcade.StaticBody;
-        body.setSize(200, 200);
+        // Precise Logical Hitbox
+        const hitbox = ctx.scene.add.rectangle(targetX, targetY - 50, 260, 150, 0, 0);
+        ctx.scene.physics.add.existing(hitbox);
+        const body = hitbox.body as Phaser.Physics.Arcade.Body;
+        body.allowGravity = false;
+        body.immovable = true;
         
         let trapActive = true;
         
         if (ctx.opponent) {
-           const collider = ctx.scene.physics.add.overlap(ice, ctx.opponent.rect, () => {
+           const collider = ctx.scene.physics.add.overlap(hitbox, ctx.opponent.rect, () => {
               if (trapActive && ctx.opponent && ctx.opponent.hp > 0) {
                  trapActive = false; // Only hit once
                  ctx.opponent.takeHit({
@@ -52,13 +60,15 @@ export class SeaTigerIceState implements IState {
               }
            });
            
-           ctx.scene.tweens.add({ targets: ice, alpha: 0, delay: 2500, duration: 500, onComplete: () => {
+           ctx.scene.tweens.add({ targets: [ice, hitbox], alpha: 0, delay: 2500, duration: 500, onComplete: () => {
               collider.destroy();
               ice.destroy();
+              hitbox.destroy();
            } });
         } else {
-           ctx.scene.tweens.add({ targets: ice, alpha: 0, delay: 2500, duration: 500, onComplete: () => {
+           ctx.scene.tweens.add({ targets: [ice, hitbox], alpha: 0, delay: 2500, duration: 500, onComplete: () => {
               ice.destroy();
+              hitbox.destroy();
            } });
         }
         
