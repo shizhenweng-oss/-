@@ -26,7 +26,7 @@ export class SeaTigerBackDashProjectileState implements IState {
     this.arrow2Emitter = null;
     this.trailEmitter = null;
     this.collider = null;
-    ctx.setPose('jump');
+    ctx.setPose('idle');
     ctx.emitStateEvent();
   }
 
@@ -77,7 +77,7 @@ export class SeaTigerBackDashProjectileState implements IState {
           speed: 0,
           frequency: 1, // Extremely dense
           follow: this.proj,
-          emitZone: { type: 'random', source: arrow1Geom }
+          emitZone: { type: 'random', source: arrow1Geom } as any
         });
 
         // Arrow 2 Emitter (Back) - Red and Black particles
@@ -90,7 +90,7 @@ export class SeaTigerBackDashProjectileState implements IState {
           speed: 0,
           frequency: 1, // Extremely dense
           follow: this.proj,
-          emitZone: { type: 'random', source: arrow2Geom }
+          emitZone: { type: 'random', source: arrow2Geom } as any
         });
 
         // Intense lightning particle trail (Blue)
@@ -104,13 +104,13 @@ export class SeaTigerBackDashProjectileState implements IState {
           angle: { min: 0, max: 360 }, 
           frequency: 5, 
           follow: this.proj,
-          emitZone: { type: 'random', source: arrow2Geom }
+          emitZone: { type: 'random', source: arrow2Geom } as any
         });
         
         // Collision
         let hit = false;
-        this.collider = st.scene.physics.add.overlap(this.proj, st.opponent.rect, () => {
-          if (hit) return;
+        this.collider = st.scene.physics.add.overlap(this.proj, st.opponent!.rect, () => {
+          if (hit || !st.opponent) return;
           hit = true;
           
           // Deal damage
@@ -144,35 +144,37 @@ export class SeaTigerBackDashProjectileState implements IState {
           }
 
           // Blue mist effect on the enemy
-          const mistEmitter = st.scene.add.particles(0, 0, 'spark', {
-            lifespan: { min: 200, max: 600 },
-            scale: { start: 2.0, end: 0 },
-            alpha: { start: 0.6, end: 0 },
-            tint: [0x0055ff, 0x0088ff],
-            blendMode: 'ADD',
-            speed: { min: 50, max: 200 },
-            angle: { min: 0, max: 360 },
-            frequency: 10,
-            follow: st.opponent.rect, // Follow the enemy
-          });
-          
-          // Big explosion at impact
-          st.scene.add.particles(st.opponent.rect.x, st.opponent.rect.y, 'spark', {
-            lifespan: 300,
-            scale: { start: 3, end: 0 },
-            alpha: { start: 1, end: 0 },
-            tint: 0xffffff,
-            blendMode: 'ADD',
-            speed: { min: 500, max: 1500 },
-            quantity: 30,
-            duration: 50
-          });
+          if (st.opponent) {
+            const mistEmitter = st.scene.add.particles(0, 0, 'spark', {
+              lifespan: { min: 200, max: 600 },
+              scale: { start: 2.0, end: 0 },
+              alpha: { start: 0.6, end: 0 },
+              tint: [0x0055ff, 0x0088ff],
+              blendMode: 'ADD',
+              speed: { min: 50, max: 200 },
+              angle: { min: 0, max: 360 },
+              frequency: 10,
+              follow: st.opponent.rect, // Follow the enemy
+            });
+            
+            // Big explosion at impact
+            st.scene.add.particles(st.opponent.rect.x, st.opponent.rect.y, 'spark', {
+              lifespan: 300,
+              scale: { start: 3, end: 0 },
+              alpha: { start: 1, end: 0 },
+              tint: 0xffffff,
+              blendMode: 'ADD',
+              speed: { min: 500, max: 1500 },
+              quantity: 30,
+              duration: 50
+            });
 
-          // Cleanup mist after a short time
-          st.scene.time.delayedCall(800, () => {
-            mistEmitter.stop();
-            setTimeout(() => mistEmitter.destroy(), 1000);
-          });
+            // Cleanup mist after a short time
+            st.scene.time.delayedCall(800, () => {
+              mistEmitter.stop();
+              setTimeout(() => mistEmitter.destroy(), 1000);
+            });
+          }
         });
 
         // Cleanup projectile if it missed

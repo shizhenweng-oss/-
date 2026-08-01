@@ -485,7 +485,7 @@ export class BaseCharacter {
   }
 
   // ── Shockwave Effect ──────────────────────────────────────────────────────
-  private spawnShockwave(x: number, y: number, color: number, scaleMultiplier: number = 1): void {
+  public spawnShockwave(x: number, y: number, color: number, scaleMultiplier: number = 1): void {
     const ring = this.scene.add.graphics({ x, y });
     ring.lineStyle(4, color, 1);
     ring.strokeCircle(0, 0, 40);
