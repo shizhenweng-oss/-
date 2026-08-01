@@ -28,14 +28,6 @@ export class SeaTigerWindState implements IState {
     const windSprite = ctx.scene.add.sprite(ctx.rect.x + 80 * dir, ctx.rect.y - 60, 'wind_pole');
     windSprite.setScale(1.5);
     if (!ctx.facingRight) windSprite.setFlipX(true);
-    
-    // Animate the wind blade spinning/flying
-    ctx.scene.tweens.add({
-      targets: windSprite,
-      angle: dir * 360,
-      duration: 400,
-      repeat: -1
-    });
 
     ctx.scene.physics.add.existing(windSprite);
     this.windBlade = windSprite as any; // Reusing reference for cleanup and collision
