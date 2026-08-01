@@ -20,22 +20,27 @@ export class SeaTigerIceState implements IState {
     
     if (this.timer < 100) {
       // Startup
-    } else if (this.timer < 300) {
-      // Active: Freeze attack
+    } else if (this.timer < 3000) {
+      // Active: Freeze attack (lasts 3 seconds)
       if (!ctx.activeHitbox) {
-        ctx.spawnHitbox(120, 150, 150);
+        ctx.spawnHitbox(120, 200, 200);
         ctx.stateData.currentHitProps = {
-          damage: 10,
+          damage: 15,
           pushbackSpeed: 0, // Keep them in place
           causesKnockdown: false,
           freezeDuration: 3000 // 3 seconds freeze
         };
         
         // Ice smash visuals
-        ctx.spawnShockwave(ctx.rect.x + (ctx.facingRight ? 80 : -80), ctx.rect.y, 0x00aaff, 1.5);
+        const dir = ctx.facingRight ? 1 : -1;
+        const ice = ctx.scene.add.sprite(ctx.rect.x + 100 * dir, ctx.rect.y, 'snow_pole');
+        ice.setOrigin(0.5, 1);
+        ice.setDepth(15);
+        ctx.scene.tweens.add({ targets: ice, alpha: 0, delay: 2500, duration: 500, onComplete: () => ice.destroy() });
+        
         ctx.scene.cameras.main.shake(200, 0.015);
       }
-    } else if (this.timer < 600) {
+    } else if (this.timer < 3300) {
       // Recovery
       ctx.destroyHitbox();
     } else {

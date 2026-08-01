@@ -34,6 +34,25 @@ export class SeaTigerFireState implements IState {
           groundBounce: true
         };
         
+        // Fire Cut-in close-up
+        const cx = ctx.scene.cameras.main.width / 2;
+        const cy = ctx.scene.cameras.main.height / 2;
+        const cutin = ctx.scene.add.sprite(cx, cy, 'fire_pole');
+        cutin.setScrollFactor(0); // Attach to screen
+        cutin.setDepth(2000);
+        cutin.setAlpha(0);
+        cutin.setScale(1.5);
+        ctx.scene.tweens.add({
+           targets: cutin,
+           scale: 1,
+           alpha: 1,
+           duration: 150,
+           ease: 'Back.easeOut',
+           yoyo: true,
+           hold: 500,
+           onComplete: () => cutin.destroy()
+        });
+        
         // Massive explosive particles
         const explosion = ctx.scene.add.particles(ctx.rect.x + (ctx.facingRight ? 100 : -100), ctx.rect.y, 'seatiger_idle', {
           lifespan: { min: 200, max: 600 },

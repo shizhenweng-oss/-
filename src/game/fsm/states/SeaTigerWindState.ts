@@ -6,7 +6,7 @@ export class SeaTigerWindState implements IState {
   readonly type = CharacterStateType.SKILL_WIND;
   private timer = 0;
   
-  private windBlade: Phaser.GameObjects.Rectangle | null = null;
+  private windBlade: Phaser.GameObjects.Sprite | Phaser.GameObjects.Rectangle | null = null;
   private windCollider: Phaser.Physics.Arcade.Collider | null = null;
   private windEmitter: Phaser.GameObjects.Particles.ParticleEmitter | null = null;
   private hitRegistered = false;
@@ -20,31 +20,44 @@ export class SeaTigerWindState implements IState {
     ctx.emitStateEvent();
     ctx.spawnMangaText('风绝！', ctx.rect.x, ctx.rect.y, true);
     
-    // Slight recoil for SeaTiger
-    ctx.setVelocityX(ctx.facingRight ? -200 : 200);
+    // Slight recoil for SeaTiger (Backstep)
+    ctx.setVelocityX(ctx.facingRight ? -400 : 400);
 
     // Spawn Wind Blade
     const dir = ctx.facingRight ? 1 : -1;
-    this.windBlade = ctx.scene.add.rectangle(ctx.rect.x + 50 * dir, ctx.rect.y - 30, 80, 160, 0xffffff, 0);
-    ctx.scene.physics.add.existing(this.windBlade);
-    const body = this.windBlade.body as Phaser.Physics.Arcade.Body;
+    const windSprite = ctx.scene.add.sprite(ctx.rect.x + 80 * dir, ctx.rect.y - 60, 'wind_pole');
+    windSprite.setScale(1.5);
+    if (!ctx.facingRight) windSprite.setFlipX(true);
+    
+    // Animate the wind blade spinning/flying
+    ctx.scene.tweens.add({
+      targets: windSprite,
+      angle: dir * 360,
+      duration: 400,
+      repeat: -1
+    });
+
+    ctx.scene.physics.add.existing(windSprite);
+    this.windBlade = windSprite as any; // Reusing reference for cleanup and collision
+    const body = windSprite.body as Phaser.Physics.Arcade.Body;
     body.allowGravity = false;
-    body.setVelocityX(2500 * dir);
+    body.setSize(100, 160);
+    body.setVelocityX(2000 * dir);
 
     // Particle Emitter for Wind Blade
-    this.windEmitter = ctx.scene.add.particles(0, 0, 'seatiger_idle', {
-      lifespan: 150,
-      scale: { start: 0.5, end: 0 },
-      alpha: { start: 0.6, end: 0 },
-      tint: 0xffffff,
-      blendMode: 'ADD',
-      quantity: 2,
-      follow: this.windBlade
+    this.windEmitter = ctx.scene.add.particles(0, 0, 'spark', {
+      lifespan: 200,
+      scale: { start: 1, end: 0 },
+      alpha: { start: 0.8, end: 0 },
+      tint: 0x000000, // Black wind
+      blendMode: 'NORMAL',
+      quantity: 3,
+      follow: windSprite
     });
     // Create crescent trail shape using a fast emission rate
     
     if (ctx.opponent) {
-      this.windCollider = ctx.scene.physics.add.overlap(this.windBlade, ctx.opponent.rect, () => {
+      this.windCollider = ctx.scene.physics.add.overlap(windSprite, ctx.opponent.rect, () => {
         if (this.hitRegistered || !ctx.opponent) return;
         this.hitRegistered = true;
         
