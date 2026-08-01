@@ -67,7 +67,11 @@ export class SeaTigerComboState implements IState {
   enter(ctx: BaseCharacter): void {
     ctx.setVelocityX(0);
     const st = ctx as SeaTiger;
-    st.seaTigerData.comboIndex = 0;
+    if (ctx.z > 0) {
+      st.seaTigerData.comboIndex = 4; // Aerial attack skips to Ground Smash
+    } else {
+      st.seaTigerData.comboIndex = 0;
+    }
     st.seaTigerData.comboBuffered = false;
     this.startHit(st);
     ctx.emitStateEvent();

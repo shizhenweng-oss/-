@@ -683,7 +683,7 @@ export class BaseCharacter {
         this.fsm.currentType !== CharacterStateType.KNOCKDOWN && 
         this.fsm.currentType !== CharacterStateType.FROZEN) {
        
-       const maxZ = this.scene.scale.height - 250; // Keep on screen
+       const maxZ = 200; // Hover height limit
        if (this.z < maxZ) {
           this.vz = 800; // Fly up
        } else {
