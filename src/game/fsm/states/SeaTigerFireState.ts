@@ -41,10 +41,10 @@ export class SeaTigerFireState implements IState {
         cutin.setScrollFactor(0); // Attach to screen
         cutin.setDepth(2000);
         cutin.setAlpha(0);
-        cutin.setScale(1.5);
+        cutin.setScale(1.125); // 75% of 1.5
         ctx.scene.tweens.add({
            targets: cutin,
-           scale: 1,
+           scale: 0.75, // 75% of 1.0
            alpha: 1,
            duration: 150,
            ease: 'Back.easeOut',

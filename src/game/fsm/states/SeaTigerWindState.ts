@@ -25,15 +25,16 @@ export class SeaTigerWindState implements IState {
 
     // Spawn Wind Blade
     const dir = ctx.facingRight ? 1 : -1;
-    const windSprite = ctx.scene.add.sprite(ctx.rect.x + 80 * dir, ctx.rect.y - 60, 'wind_pole');
-    windSprite.setScale(1.5);
+    const windSprite = ctx.scene.add.sprite(ctx.rect.x + 80 * dir, ctx.rect.y, 'wind_pole');
+    windSprite.setOrigin(0.5, 1); // Touch the ground
+    windSprite.setScale(0.75); // Scaled down to 50% of previous 1.5
     if (!ctx.facingRight) windSprite.setFlipX(true);
-
+    
     ctx.scene.physics.add.existing(windSprite);
     this.windBlade = windSprite as any; // Reusing reference for cleanup and collision
     const body = windSprite.body as Phaser.Physics.Arcade.Body;
     body.allowGravity = false;
-    body.setSize(100, 160);
+    body.setSize(50, 80);
     body.setVelocityX(2000 * dir);
 
     // Particle Emitter for Wind Blade

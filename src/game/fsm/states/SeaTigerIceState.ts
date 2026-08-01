@@ -30,7 +30,7 @@ export class SeaTigerIceState implements IState {
         
         const dir = ctx.facingRight ? 1 : -1;
         const targetX = ctx.rect.x + 220 * dir; // Moved forward by ~1 body length
-        const targetY = ctx.rect.y;
+        const targetY = ctx.rect.y + 60; // Moved down by half a body length
         
         // Visual Sprite
         const ice = ctx.scene.add.sprite(targetX, targetY, 'snow_pole');
@@ -39,8 +39,8 @@ export class SeaTigerIceState implements IState {
         ice.setFlipX(ctx.facingRight); // Mirror image since the original texture is reversed
         ice.setDepth(15);
         
-        // Precise Logical Hitbox
-        const hitbox = ctx.scene.add.rectangle(targetX, targetY - 50, 260, 150, 0, 0);
+        // Precise Logical Hitbox (Bottom edge touching targetY)
+        const hitbox = ctx.scene.add.rectangle(targetX, targetY - 75, 260, 150, 0, 0);
         ctx.scene.physics.add.existing(hitbox);
         const body = hitbox.body as Phaser.Physics.Arcade.Body;
         body.allowGravity = false;
