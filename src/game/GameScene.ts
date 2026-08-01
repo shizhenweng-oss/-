@@ -32,6 +32,7 @@ export class GameScene extends Phaser.Scene {
     down:   Phaser.Input.Keyboard.Key;
     left:   Phaser.Input.Keyboard.Key;
     right:  Phaser.Input.Keyboard.Key;
+    jump:   Phaser.Input.Keyboard.Key;
     attack: Phaser.Input.Keyboard.Key; // Z
     sub:    Phaser.Input.Keyboard.Key; // F 
     skill1: Phaser.Input.Keyboard.Key; // C
@@ -48,6 +49,7 @@ export class GameScene extends Phaser.Scene {
     down:   Phaser.Input.Keyboard.Key;
     left:   Phaser.Input.Keyboard.Key;
     right:  Phaser.Input.Keyboard.Key;
+    jump:   Phaser.Input.Keyboard.Key;
     attack: Phaser.Input.Keyboard.Key; // O
     sub:    Phaser.Input.Keyboard.Key; // P
     skill1: Phaser.Input.Keyboard.Key; // K
@@ -186,6 +188,7 @@ export class GameScene extends Phaser.Scene {
         down:   this.input.keyboard.addKey(KC.S),
         left:   this.input.keyboard.addKey(KC.A),
         right:  this.input.keyboard.addKey(KC.D),
+        jump:   this.input.keyboard.addKey(KC.SPACE),
         attack: this.input.keyboard.addKey(KC.Z),
         sub:    this.input.keyboard.addKey(KC.F),
         skill1: this.input.keyboard.addKey(KC.C),
@@ -203,6 +206,7 @@ export class GameScene extends Phaser.Scene {
         down:   this.input.keyboard.addKey(KC.DOWN),
         left:   this.input.keyboard.addKey(KC.LEFT),
         right:  this.input.keyboard.addKey(KC.RIGHT),
+        jump:   this.input.keyboard.addKey(KC.UP),
         attack: this.input.keyboard.addKey(KC.O),
         sub:    this.input.keyboard.addKey(KC.P),
         skill1: this.input.keyboard.addKey(KC.K),
@@ -224,7 +228,7 @@ export class GameScene extends Phaser.Scene {
       .text(
         width / 2,
         height - 10,
-        '  P1: W A S D · Z atk · C skill · E ult        P2: Arrows · O atk · K skill · L ult  ',
+        '  P1: A D move · Space jump · Z atk · C skill · E ult        P2: L/R arrows move · Up jump · O atk · K skill · L ult  ',
         {
           fontSize:        '11px',
           color:           '#777777',
@@ -277,6 +281,7 @@ export class GameScene extends Phaser.Scene {
         moveDown:   keys.down.isDown,
         moveLeft:   keys.left.isDown,
         moveRight:  keys.right.isDown,
+        jump:       Phaser.Input.Keyboard.JustDown(keys.jump),
         attack:     Phaser.Input.Keyboard.JustDown(keys.attack),
         attackHold: keys.attack.isDown,
         substitute: Phaser.Input.Keyboard.JustDown(keys.sub),

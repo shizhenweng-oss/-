@@ -761,6 +761,12 @@ export class BaseCharacter {
     // If we're frozen, we can't do anything!
     if (this.fsm.currentType === CharacterStateType.FROZEN) return false;
 
+    // Jumping
+    if (this.input.jump && this.z === 0) {
+      this.vz = 1500; // Jump velocity
+      this.z = 1;
+    }
+
     // Keep track of recent ultimate presses
     this.ultimatePresses = this.ultimatePresses.filter(t => this.scene.time.now - t <= 1500);
     

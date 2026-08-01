@@ -42,7 +42,7 @@ export class WalkingState implements IState {
 
     const { input } = ctx;
 
-    if (!input.moveLeft && !input.moveRight && !input.moveUp && !input.moveDown) {
+    if (!input.moveLeft && !input.moveRight) {
       ctx.fsm.transition(CharacterStateType.IDLE);
       return;
     }
@@ -59,13 +59,7 @@ export class WalkingState implements IState {
       ctx.setVelocityX(0);
     }
 
-    if (input.moveUp) {
-      ctx.getBody()?.setVelocityY(-speed * 0.7); // Slower on Y axis for perspective
-    } else if (input.moveDown) {
-      ctx.getBody()?.setVelocityY(speed * 0.7);
-    } else {
-      ctx.getBody()?.setVelocityY(0);
-    }
+    ctx.getBody()?.setVelocityY(0);
   }
 
   exit(ctx: BaseCharacter): void {

@@ -6,6 +6,7 @@ export interface CharacterInput {
   moveRight:  boolean;
   moveUp:     boolean;
   moveDown:   boolean;
+  jump:       boolean;
   /** Normal attack key — JustDown (true for exactly 1 frame) */
   attack:     boolean;
   /** Normal attack key — Hold state */
@@ -39,6 +40,7 @@ export const emptyInput = (): CharacterInput => ({
   moveRight:  false,
   moveUp:     false,
   moveDown:   false,
+  jump:       false,
   attack:     false,
   attackHold: false,
   substitute: false,

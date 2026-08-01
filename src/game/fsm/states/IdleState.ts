@@ -39,7 +39,7 @@ export class IdleState implements IState {
       return;
     }
 
-    if (ctx.input.moveLeft || ctx.input.moveRight || ctx.input.moveUp || ctx.input.moveDown) {
+    if (ctx.input.moveLeft || ctx.input.moveRight) {
       ctx.fsm.transition(CharacterStateType.WALKING);
     }
   }
