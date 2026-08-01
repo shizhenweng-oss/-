@@ -164,6 +164,15 @@ export class GameScene extends Phaser.Scene {
     // ── Keyboard bindings ─────────────────────────────────────────────────
     if (this.input.keyboard) {
       const KC = Phaser.Input.Keyboard.KeyCodes;
+      
+      // Cheat key: Press '1' to set P1 HP to 20% for testing
+      this.input.keyboard.on('keydown-ONE', () => {
+         this.p1.hp = Math.min(this.p1.hp, this.p1.maxHp * 0.2);
+         // The HP event is not strictly needed here if we rely on a damage call, but let's just trigger takeHit
+         this.p1.takeHit({ damage: this.p1.hp - (this.p1.maxHp * 0.2) > 0 ? this.p1.hp - (this.p1.maxHp * 0.2) : 0, pushbackSpeed: 0, causesKnockdown: false }, 1);
+         // hard set it just in case
+         this.p1.hp = this.p1.maxHp * 0.2; 
+      });
 
       this.p1Keys = {
         up:     this.input.keyboard.addKey(KC.W),
