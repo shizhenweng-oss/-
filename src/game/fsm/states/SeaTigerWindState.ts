@@ -5,8 +5,8 @@ import { CharacterStateType } from '../CharacterStateType';
 export class SeaTigerWindState implements IState {
   readonly type = CharacterStateType.SKILL_WIND;
   private timer = 0;
-  
   private windBlade: Phaser.GameObjects.Sprite | Phaser.GameObjects.Rectangle | null = null;
+  private windHitbox: Phaser.GameObjects.Rectangle | null = null;
   private windCollider: Phaser.Physics.Arcade.Collider | null = null;
   private windEmitter: Phaser.GameObjects.Particles.ParticleEmitter | null = null;
   private hitRegistered = false;
@@ -23,19 +23,26 @@ export class SeaTigerWindState implements IState {
     // Slight recoil for SeaTiger (Backstep)
     ctx.setVelocityX(ctx.facingRight ? -400 : 400);
 
-    // Spawn Wind Blade
+    // Spawn Wind Blade Visual
     const dir = ctx.facingRight ? 1 : -1;
-    const windSprite = ctx.scene.add.sprite(ctx.rect.x + 80 * dir, ctx.rect.y, 'wind_pole');
-    windSprite.setOrigin(0.5, 1); // Touch the ground
+    const windSprite = ctx.scene.add.sprite(ctx.rect.x + 80 * dir, ctx.rect.y + 60, 'wind_pole');
+    windSprite.setOrigin(0.5, 1); // Visually lower
     windSprite.setScale(0.75); // Scaled down to 50% of previous 1.5
     if (!ctx.facingRight) windSprite.setFlipX(true);
     
     ctx.scene.physics.add.existing(windSprite);
-    this.windBlade = windSprite as any; // Reusing reference for cleanup and collision
-    const body = windSprite.body as Phaser.Physics.Arcade.Body;
+    (windSprite.body as Phaser.Physics.Arcade.Body).allowGravity = false;
+    (windSprite.body as Phaser.Physics.Arcade.Body).setVelocityX(2000 * dir);
+    
+    // Spawn Wind Hitbox
+    const windHitbox = ctx.scene.add.rectangle(ctx.rect.x + 80 * dir, ctx.rect.y - 40, 50, 80, 0, 0);
+    ctx.scene.physics.add.existing(windHitbox);
+    const body = windHitbox.body as Phaser.Physics.Arcade.Body;
     body.allowGravity = false;
-    body.setSize(50, 80);
     body.setVelocityX(2000 * dir);
+
+    this.windBlade = windSprite as any;
+    this.windHitbox = windHitbox;
 
     // Particle Emitter for Wind Blade
     this.windEmitter = ctx.scene.add.particles(0, 0, 'spark', {
@@ -50,7 +57,7 @@ export class SeaTigerWindState implements IState {
     // Create crescent trail shape using a fast emission rate
     
     if (ctx.opponent) {
-      this.windCollider = ctx.scene.physics.add.overlap(windSprite, ctx.opponent.rect, () => {
+      this.windCollider = ctx.scene.physics.add.overlap(windHitbox, ctx.opponent.rect, () => {
         if (this.hitRegistered || !ctx.opponent) return;
         this.hitRegistered = true;
         
@@ -84,6 +91,10 @@ export class SeaTigerWindState implements IState {
     if (this.windBlade) {
       this.windBlade.destroy();
       this.windBlade = null;
+    }
+    if (this.windHitbox) {
+      this.windHitbox.destroy();
+      this.windHitbox = null;
     }
     if (this.windEmitter) {
       this.windEmitter.stop();
