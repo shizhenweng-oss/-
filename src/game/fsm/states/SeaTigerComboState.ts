@@ -83,6 +83,9 @@ export class SeaTigerComboState implements IState {
     st.setBodyTint(0xffcc00); // Startup flash
     const hitConf = HITS[st.seaTigerData.comboIndex];
     st.stateData.currentHitProps = hitConf.props;
+    
+    // Set custom combo sprite pose (p1 to p5)
+    st.setPose(`p${st.seaTigerData.comboIndex + 1}` as any);
 
     if (hitConf.selfVx) {
       const dir = st.facingRight ? 1 : -1;
@@ -268,5 +271,6 @@ export class SeaTigerComboState implements IState {
   exit(ctx: BaseCharacter): void {
     ctx.destroyHitbox();
     ctx.setBodyTint(ctx.baseColor);
+    ctx.setPose('idle');
   }
 }

@@ -72,6 +72,11 @@ export class GameScene extends Phaser.Scene {
     this.load.image('seatiger_avatar', '/assets/seatiger_avatar.png');
     this.load.image('seatiger_idle', '/assets/seatiger_idle.png');
     this.load.image('seatiger_ultimate', '/assets/seatiger_ultimate.png');
+    this.load.image('p1', '/assets/p1.png');
+    this.load.image('p2', '/assets/p2.png');
+    this.load.image('p3', '/assets/p3.png');
+    this.load.image('p4', '/assets/p4.png');
+    this.load.image('p5', '/assets/p5.jpg');
     this.load.image('blast_effect', '/assets/blast_effect.jpg');
     this.load.image('ultimate_blast', '/assets/ultimate_blast.jpg');
     this.load.image('ruined_city_bg', '/assets/ruined_city_bg.jpg');
@@ -126,10 +131,16 @@ export class GameScene extends Phaser.Scene {
       name:         'SEATIGER',
       maxHp:        300,
       attackDamage: 14,
+      avatarKey: 'seatiger_avatar',
       sprites: {
         idle: 'seatiger_idle',
-        punch: 'seatiger_punch',
-        ultimate: 'seatiger_ultimate'
+        punch: 'seatiger_idle',
+        ultimate: 'seatiger_ultimate',
+        p1: 'p1',
+        p2: 'p2',
+        p3: 'p3',
+        p4: 'p4',
+        p5: 'p5'
       }
     });
 

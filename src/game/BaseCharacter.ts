@@ -29,6 +29,11 @@ export interface CharacterConfig {
     idle: string;
     punch: string;
     ultimate: string;
+    p1?: string;
+    p2?: string;
+    p3?: string;
+    p4?: string;
+    p5?: string;
   };
 }
 
@@ -293,9 +298,10 @@ export class BaseCharacter {
   }
 
   /** Change the current pose texture if sprites are configured */
-  setPose(pose: 'idle' | 'punch' | 'ultimate'): void {
+  setPose(pose: 'idle' | 'punch' | 'ultimate' | 'p1' | 'p2' | 'p3' | 'p4' | 'p5'): void {
     if (this.sprite && this.spritesConfig) {
-      this.sprite.setTexture(this.spritesConfig[pose]);
+      const texKey = this.spritesConfig[pose] || this.spritesConfig.idle;
+      this.sprite.setTexture(texKey);
       
       // Re-adjust scale in case images are of vastly different dimensions
       const scale = Math.min(this.width / this.sprite.width, this.height / this.sprite.height) * 3;
