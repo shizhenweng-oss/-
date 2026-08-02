@@ -27,6 +27,7 @@ export const EVENTS = {
   /** { phase: 1 | 2 | 3 | 4 } */
   UI_CINEMATIC_ULTIMATE: 'ui-cinematic-ultimate',
   UI_CINEMATIC_VIDEO_ENDED: 'ui-cinematic-video-ended',
+  UI_TIME_OVER: 'ui-time-over',
 } as const;
 
 export type EventPayloads = {
@@ -48,4 +49,5 @@ export type EventPayloads = {
   [EVENTS.UI_BUFF_EFFECT]:       { player: 1 | 2; active: boolean; type: 'thunder'|'ice'|'fire' };
   [EVENTS.UI_CINEMATIC_ULTIMATE]: { phase: 1 | 2 | 3 | 4 | 5 | 6 | 0 }; // 0 to clear
   [EVENTS.UI_CINEMATIC_VIDEO_ENDED]: void;
+  [EVENTS.UI_TIME_OVER]: void;
 };

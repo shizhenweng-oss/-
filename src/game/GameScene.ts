@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { BaseCharacter } from './BaseCharacter';
 import { SeaTiger } from './SeaTiger';
+import { EventBus, EVENTS } from './EventBus';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // GameScene — the main fight scene.
@@ -172,6 +173,10 @@ export class GameScene extends Phaser.Scene {
       name:         'REIKA',
       maxHp:        300,
       attackDamage: 12,
+    });
+
+    EventBus.on(EVENTS.UI_TIME_OVER, () => {
+      this.physics.pause();
     });
 
     // ── Link opponents ────────────────────────────────────────────────────

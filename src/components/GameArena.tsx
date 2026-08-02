@@ -58,6 +58,7 @@ export const GameArena: React.FC = () => {
   // ── Round timer ───────────────────────────────────────────────────────────
   const [roundTime, setRoundTime]       = useState(ROUND_DURATION);
   const [roundRunning, setRoundRunning] = useState(true);
+  const [timeOverPhase, setTimeOverPhase] = useState<number>(0);
   const [ultimatePhase, setUltimatePhase] = useState<number>(0);
   const [videoIndex, setVideoIndex] = useState<number>(1);
   const [phase1Text, setPhase1Text] = useState("");
@@ -160,10 +161,17 @@ export const GameArena: React.FC = () => {
 
   // ── Round countdown ───────────────────────────────────────────────────────
   useEffect(() => {
-    if (!roundRunning || roundTime <= 0) { setRoundRunning(false); return; }
+    if (!roundRunning || roundTime <= 0) { 
+       if (roundTime <= 0 && p1.hp > 0 && p2.hp > 0 && timeOverPhase === 0) {
+         setTimeOverPhase(1);
+         EventBus.emit(EVENTS.UI_TIME_OVER);
+       }
+       setRoundRunning(false); 
+       return; 
+    }
     const id = setInterval(() => setRoundTime(t => Math.max(0, t - 1)), 1_000);
     return () => clearInterval(id);
-  }, [roundRunning, roundTime]);
+  }, [roundRunning, roundTime, p1.hp, p2.hp, timeOverPhase]);
 
   // ── Phase 1 Typewriter ──────────────────────────────────────────────────
   useEffect(() => {
@@ -504,6 +512,27 @@ export const GameArena: React.FC = () => {
           </div>
         )}
 
+        {/* TIME OVER VIDEO */}
+        {timeOverPhase === 1 && (
+          <div className="pointer-events-none absolute inset-0 z-50 flex items-center justify-center overflow-hidden bg-black">
+            <video 
+              src="/assets/planet_explosion.mp4" 
+              autoPlay 
+              className="absolute inset-0 w-full h-full object-contain mix-blend-screen opacity-80"
+              onEnded={() => setTimeOverPhase(2)}
+            />
+            <div 
+              className="z-30 text-white font-black italic text-8xl md:text-[8rem] text-center whitespace-pre-wrap leading-tight drop-shadow-[0_0_50px_rgba(255,0,0,1)] tracking-tighter"
+              style={{
+                textShadow: '0 0 50px #ff0000, 0 0 100px #ffaa00',
+                WebkitTextStroke: '4px #000',
+                animation: 'ultimate-fade-text 5s ease-in-out forwards 0.5s'
+              }}
+            >
+              绝对不行<br/>轻易不行
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
