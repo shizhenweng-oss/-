@@ -66,6 +66,8 @@ export class GameScene extends Phaser.Scene {
   // Background (redrawn on resize)
   private bgLayer!: Phaser.GameObjects.Graphics;
   private floorLayer!: Phaser.GameObjects.Graphics;
+  private bgImage?: Phaser.GameObjects.Image;
+  private isDestroyed: boolean = false;
 
   constructor() {
     super({ key: 'GameScene' });
@@ -85,6 +87,7 @@ export class GameScene extends Phaser.Scene {
     this.load.image('blast_effect', '/assets/blast_effect.jpg');
     this.load.image('ultimate_blast', '/assets/ultimate_blast.jpg');
     this.load.image('moon_surface', '/assets/moon_surface.jpg');
+    this.load.image('bg_destroyed', '/assets/moon_destroyed.jpg');
     this.load.image('ground_crater', '/assets/ground_crater.jpg');
     this.load.image('cell_reconstruction', '/assets/cell_reconstruction.png');
     
@@ -177,6 +180,15 @@ export class GameScene extends Phaser.Scene {
 
     EventBus.on(EVENTS.UI_TIME_OVER, () => {
       this.physics.pause();
+    });
+
+    EventBus.on(EVENTS.UI_CINEMATIC_ULTIMATE, (payload: { phase: number }) => {
+      if (payload.phase === 4 || payload.phase === 6) {
+        this.isDestroyed = true;
+        if (this.bgImage) {
+          this.bgImage.setTexture('bg_destroyed');
+        }
+      }
     });
 
     // ── Link opponents ────────────────────────────────────────────────────
@@ -318,14 +330,19 @@ export class GameScene extends Phaser.Scene {
 
   private drawBackground(w: number, h: number): void {
     // Ruined City Background
-    if (this.textures.exists('moon_surface')) {
-      const bg = this.add.image(w / 2, 0, 'moon_surface');
-      bg.setOrigin(0.5, 0); // Align to top to show deep space
+    if (this.bgImage) {
+      this.bgImage.destroy();
+    }
+
+    const textureKey = this.isDestroyed ? 'bg_destroyed' : 'moon_surface';
+    if (this.textures.exists(textureKey)) {
+      this.bgImage = this.add.image(w / 2, 0, textureKey);
+      this.bgImage.setOrigin(0.5, 0); // Align to top to show deep space
       // Scale to cover screen width
-      const scaleX = w / bg.width;
-      const scaleY = h / bg.height;
-      bg.setScale(Math.max(scaleX, scaleY));
-      bg.setDepth(0);
+      const scaleX = w / this.bgImage.width;
+      const scaleY = h / this.bgImage.height;
+      this.bgImage.setScale(Math.max(scaleX, scaleY));
+      this.bgImage.setDepth(0);
     } else {
       // Fallback Sky gradient
       this.bgLayer.fillGradientStyle(0x020210, 0x020210, 0x08042a, 0x08042a, 1);
