@@ -37,19 +37,34 @@ export class SeaTigerUltimateHiddenState implements IState {
             ctx.sprite.setOrigin(0.5, 0.5);
          }
 
-         // Add persistent blood steam hurricane emitter
+         // Add persistent blood steam hurricane emitter (Red)
          st.seaTigerData.ribBurstEmitter = ctx.scene.add.particles(0, 0, 'spark', {
             lifespan: { min: 600, max: 1200 },
-            scale: { start: 1.5, end: 0 },
+            scale: { start: 0.8, end: 0 },
             alpha: { start: 0.8, end: 0 },
             tint: 0xff0000, // Blood red steam
             blendMode: 'ADD',
             speedY: { min: -500, max: -150 },
             speedX: { min: -150, max: 150 }, // Spreads out like a V (hurricane)
             accelerationY: -300,
-            frequency: 5, // Extremely dense
+            frequency: 2, // Even more dense
             follow: ctx.hurtbox, // Track the jumping hurtbox!
             followOffset: { x: 0, y: 30 } // Starts near waist/legs
+         });
+         
+         // Add black smoke for realism (NORMAL blend mode to be visible)
+         st.seaTigerData.ribBurstSmokeEmitter = ctx.scene.add.particles(0, 0, 'spark', {
+            lifespan: { min: 800, max: 1500 },
+            scale: { start: 1.2, end: 0 },
+            alpha: { start: 0.5, end: 0 },
+            tint: 0x222222, // Dark smoke
+            blendMode: 'NORMAL',
+            speedY: { min: -400, max: -100 },
+            speedX: { min: -100, max: 100 },
+            accelerationY: -200,
+            frequency: 6, // Sparse but visible
+            follow: ctx.hurtbox,
+            followOffset: { x: 0, y: 30 }
          });
          
          // Spotlight / Dim background
@@ -135,6 +150,10 @@ export class SeaTigerUltimateHiddenState implements IState {
           if (st.seaTigerData?.ribBurstEmitter) {
              st.seaTigerData.ribBurstEmitter.destroy();
              st.seaTigerData.ribBurstEmitter = null;
+          }
+          if (st.seaTigerData?.ribBurstSmokeEmitter) {
+             st.seaTigerData.ribBurstSmokeEmitter.destroy();
+             st.seaTigerData.ribBurstSmokeEmitter = null;
           }
           
           // Fall to the ground (lying pose)
