@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { BaseCharacter } from './BaseCharacter';
 import { SeaTiger } from './SeaTiger';
 import { EventBus, EVENTS } from './EventBus';
+import { EnemyAIController } from './EnemyAIController';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // GameScene — the main fight scene.
@@ -68,6 +69,8 @@ export class GameScene extends Phaser.Scene {
   private floorLayer!: Phaser.GameObjects.Graphics;
   private bgImage?: Phaser.GameObjects.Image;
   private isDestroyed: boolean = false;
+
+  private enemyAI!: EnemyAIController;
 
   constructor() {
     super({ key: 'GameScene' });
@@ -195,7 +198,10 @@ export class GameScene extends Phaser.Scene {
     this.p1.opponent = this.p2;
     this.p2.opponent = this.p1;
 
-    // ── Keyboard bindings ─────────────────────────────────────────────────
+    // Initialize Enemy AI
+    this.enemyAI = new EnemyAIController(this.p2, this.p1);
+
+    // ── Input bindings ────────────────────────────────────────────────────
     if (this.input.keyboard) {
       const KC = Phaser.Input.Keyboard.KeyCodes;
       
@@ -279,8 +285,15 @@ export class GameScene extends Phaser.Scene {
 
   // ── Per-frame update ──────────────────────────────────────────────────────
 
-  update(_time: number, delta: number): void {
+  update(time: number, delta: number): void {
+    if (!this.scene.isActive()) return;
+
     this.pollInput();
+    
+    // Override P2 input with AI
+    if (this.enemyAI) {
+      this.p2.input = this.enemyAI.update(time, delta);
+    }
     this.p1.update(delta);
     this.p2.update(delta);
 
