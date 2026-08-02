@@ -74,30 +74,21 @@ export class SeaTigerUltimateHiddenState implements IState {
             follow: ctx.hurtbox,
             followOffset: { x: 0, y: 30 }
          });
-         
-         // (We don't need spotlight/shake/particles for Phase 1 anymore because it's in the video, 
-         // but we keep the logic here if needed, or we just play the video).
-         // st.seaTigerData.dimBg = ctx.scene.add.rectangle(0, 0, 9999, 9999, 0x000000, 0.8).setOrigin(0, 0).setDepth(9);
       }
       
-      this.videoFinished = false;
-      EventBus.on(EVENTS.UI_CINEMATIC_VIDEO_ENDED, this.onVideoEndHandler);
-      EventBus.emit(EVENTS.UI_CINEMATIC_ULTIMATE, { phase: 5 }); // 5 = Play Video
-      
-      ctx.scene.physics.pause(); // Stop frame during video
+      // Emit Phase 1 UI (Text: 他妈的...现在，已是去尽的时候...)
+      EventBus.emit(EVENTS.UI_CINEMATIC_ULTIMATE, { phase: 1 });
+      ctx.scene.physics.pause(); // Pause for the dialogue
       ctx.emitStateEvent();
     } else {
-      // PHASE 2 (No longer used directly, but kept for legacy if triggered)
+      // PHASE 2: Video Cinematic and Attack (Second X Press)
+      this.phase = 2;
+      this.videoFinished = false;
+      EventBus.on(EVENTS.UI_CINEMATIC_VIDEO_ENDED, this.onVideoEndHandler);
       EventBus.emit(EVENTS.UI_CINEMATIC_ULTIMATE, { phase: 2 });
       
-      if (ctx.opponent) {
-         const oppX = ctx.opponent.rect.x;
-         const onLeft = ctx.rect.x < oppX;
-         const behindX = onLeft ? oppX + 80 : oppX - 80;
-         ctx.getBody()?.reset(behindX, ctx.rect.y);
-         ctx.facingRight = ctx.rect.x < oppX;
-         if (ctx.sprite) ctx.sprite.setFlipX(!ctx.facingRight);
-      }
+      ctx.scene.physics.pause(); // Stop frame during UI + video
+      ctx.emitStateEvent();
     }
   }
 
@@ -106,6 +97,19 @@ export class SeaTigerUltimateHiddenState implements IState {
     ctx.setVelocityX(0);
 
     if (this.phase === 1) {
+      if (this.timer > 4000) {
+        // Return to IDLE after dialogue finishes
+        EventBus.emit(EVENTS.UI_CINEMATIC_ULTIMATE, { phase: 0 }); // clear UI
+        ctx.scene.physics.resume();
+        ctx.fsm.transition(CharacterStateType.IDLE);
+      }
+    } 
+    else if (this.phase === 2) {
+      if (this.timer >= 3000 && !this.impactDealt) {
+         this.impactDealt = true; // Use this flag to indicate video has started
+         EventBus.emit(EVENTS.UI_CINEMATIC_ULTIMATE, { phase: 5 }); // 5 = Play Video
+      }
+      
       if (this.videoFinished) {
          ctx.scene.physics.resume();
          
@@ -142,16 +146,10 @@ export class SeaTigerUltimateHiddenState implements IState {
          if (rng < 0.1) {
             EventBus.emit(EVENTS.UI_CINEMATIC_ULTIMATE, { phase: 4 }); // Survive text
          } else {
-            // Wait, UI_CINEMATIC_ULTIMATE 5 was die text but we used 5 for video!
-            // Let's use 6 for die text to avoid collision, or 0. Wait, Phase 4 in React was survival ending.
             EventBus.emit(EVENTS.UI_CINEMATIC_ULTIMATE, { phase: 6 }); // Die text
             ctx.takeHit({ damage: 99999, pushbackSpeed: 0, causesKnockdown: true }, 1);
          }
       }
-    }
-    else if (this.phase === 2 || this.phase === 3) {
-       // Legacy phases replaced by video
-       this.phase = 4;
     }
     else if (this.phase === 4) {
        if (this.timer > 4000) {

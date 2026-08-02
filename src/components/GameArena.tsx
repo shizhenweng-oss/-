@@ -478,7 +478,7 @@ export const GameArena: React.FC = () => {
                     animation: 'slow-fade-out 5s ease-in-out forwards 1.5s',
                   }}
                 >
-                  一百万匹力量的代价……<br/>海虎 灰飞烟灭。
+                  小瞳…我…未能做到。<br/>首男…我对你不起…
                 </div>
               </div>
             )}
