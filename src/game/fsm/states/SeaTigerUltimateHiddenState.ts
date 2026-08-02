@@ -31,17 +31,20 @@ export class SeaTigerUltimateHiddenState implements IState {
          // For now, setting the texture and locking it is best handled in setPose, 
          // but since it's a static image, we can just let it stay.
 
-         // Add persistent smoke emitter
+         // Add persistent blood steam hurricane emitter
          st.seaTigerData.ribBurstEmitter = ctx.scene.add.particles(0, 0, 'spark', {
-            lifespan: { min: 400, max: 800 },
-            scale: { start: 1.5, end: 0 },
-            alpha: { start: 0.8, end: 0 },
-            tint: 0xffffff,
+            lifespan: { min: 600, max: 1200 },
+            scale: { start: 2.5, end: 0 },
+            alpha: { start: 0.7, end: 0 },
+            tint: [0xff0000, 0xff5555, 0xffffff], // Blood red and white steam
             blendMode: 'ADD',
-            speed: { min: 100, max: 300 },
-            angle: { min: 250, max: 290 },
-            frequency: 50,
+            speedY: { min: -150, max: -500 },
+            speedX: { min: -150, max: 150 }, // Spreads out like a V (hurricane)
+            accelerationY: -300,
+            frequency: 15, // Very dense
             follow: ctx.rect,
+            followOffset: { x: 0, y: 30 }, // Starts near waist/legs
+            emitZone: { type: 'random', source: new Phaser.Geom.Rectangle(-40, -20, 80, 40) } as any // Base of the hurricane
          });
       }
       
