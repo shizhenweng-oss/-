@@ -83,7 +83,7 @@ export class GameScene extends Phaser.Scene {
     this.load.image('p5', '/assets/p5.png');
     this.load.image('blast_effect', '/assets/blast_effect.jpg');
     this.load.image('ultimate_blast', '/assets/ultimate_blast.jpg');
-    this.load.image('ruined_city_bg', '/assets/ruined_city_bg.jpg');
+    this.load.image('moon_surface', '/assets/moon_surface.jpg');
     this.load.image('ground_crater', '/assets/ground_crater.jpg');
     this.load.image('cell_reconstruction', '/assets/cell_reconstruction.png');
     
@@ -314,8 +314,8 @@ export class GameScene extends Phaser.Scene {
 
   private drawBackground(w: number, h: number, floorY: number): void {
     // Ruined City Background
-    if (this.textures.exists('ruined_city_bg')) {
-      const bg = this.add.image(w / 2, h / 2, 'ruined_city_bg');
+    if (this.textures.exists('moon_surface')) {
+      const bg = this.add.image(w / 2, h / 2, 'moon_surface');
       // Scale to cover screen
       const scaleX = w / bg.width;
       const scaleY = h / bg.height;
