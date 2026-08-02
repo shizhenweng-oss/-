@@ -153,6 +153,7 @@ export class BaseCharacter {
   spriteOffsetX: number = 0;
   spriteOffsetY: number = 0;
   shadow: Phaser.GameObjects.Ellipse;
+  hurtbox: Phaser.GameObjects.Rectangle;
 
   /** True while Cellular Reconstruction i-frames are active. */
   get isInvulnerable(): boolean { return this._subInvulnerable; }
@@ -233,7 +234,15 @@ export class BaseCharacter {
     }
     
     // Shadow
-    this.shadow = scene.add.ellipse(this.rect.x, this.rect.y + this.height / 2, this.width, this.width * 0.4, 0x000000, 0.4);
+    this.shadow = scene.add.ellipse(cfg.x, cfg.y + this.height / 2, this.width * 0.7, 20, 0x000000, 0.4);
+    this.shadow.setDepth(1); // Shadows always draw under characters
+
+    // The tall visual hurtbox that moves with Z (for combat collision)
+    this.hurtbox = scene.add.rectangle(cfg.x, cfg.y - this.height / 2, this.width * 0.5, this.height, 0x0000ff, 0.0);
+    scene.physics.add.existing(this.hurtbox);
+    const hurtBody = this.hurtbox.body as Phaser.Physics.Arcade.Body;
+    hurtBody.setAllowGravity(false);
+    hurtBody.setImmovable(true);
 
     this.spritesConfig = cfg.sprites;
 
@@ -358,7 +367,7 @@ export class BaseCharacter {
 
     this.activeHitboxCollider = this.scene.physics.add.overlap(
       this.activeHitbox,
-      this.opponent.rect,
+      this.opponent.hurtbox, // Use the 3D-accurate hurtbox
       (() => {
         // 2.5D Depth check (Z-axis overlap)
         const zDiff = Math.abs(this.z - this.opponent!.z);
@@ -924,6 +933,14 @@ export class BaseCharacter {
 
     // Sync visuals with physics (Y is visual, rect.y is ground projection)
     this.shadow.setPosition(this.rect.x, this.rect.y + this.height / 2);
+    
+    // Sync the tall hurtbox to the character's visual position
+    if (this.hurtbox) {
+      const hbody = this.hurtbox.body as Phaser.Physics.Arcade.Body;
+      const cy = this.rect.y - this.z - this.height * 0.1; // Offset center slightly up
+      if (hbody) hbody.reset(this.rect.x, cy);
+      else this.hurtbox.setPosition(this.rect.x, cy);
+    }
     
     // Timers run first — takeHit() checks isInvulnerable immediately
     this._tickTimers(delta);

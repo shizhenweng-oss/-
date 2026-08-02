@@ -40,14 +40,14 @@ export class SeaTigerUltimateHiddenState implements IState {
          // Add persistent blood steam hurricane emitter
          st.seaTigerData.ribBurstEmitter = ctx.scene.add.particles(0, 0, 'spark', {
             lifespan: { min: 600, max: 1200 },
-            scale: { start: 2.5, end: 0 },
-            alpha: { start: 0.7, end: 0 },
+            scale: { start: 1.5, end: 0 },
+            alpha: { start: 0.8, end: 0 },
             tint: 0xff0000, // Blood red steam
             blendMode: 'ADD',
             speedY: { min: -500, max: -150 },
             speedX: { min: -150, max: 150 }, // Spreads out like a V (hurricane)
             accelerationY: -300,
-            frequency: 15, // Very dense
+            frequency: 5, // Extremely dense
             follow: ctx.rect,
             followOffset: { x: 0, y: 30 } // Starts near waist/legs
          });
