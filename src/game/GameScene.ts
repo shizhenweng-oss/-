@@ -36,7 +36,7 @@ export class GameScene extends Phaser.Scene {
     jump:   Phaser.Input.Keyboard.Key;
     attack: Phaser.Input.Keyboard.Key; // Z
     sub:    Phaser.Input.Keyboard.Key; // F 
-    skill1: Phaser.Input.Keyboard.Key; // C
+    skill1?: Phaser.Input.Keyboard.Key; // C
     skill2: Phaser.Input.Keyboard.Key; // X
     heal:   Phaser.Input.Keyboard.Key; // H
     ultimate: Phaser.Input.Keyboard.Key; // E
@@ -53,7 +53,7 @@ export class GameScene extends Phaser.Scene {
     jump:   Phaser.Input.Keyboard.Key;
     attack: Phaser.Input.Keyboard.Key; // O
     sub:    Phaser.Input.Keyboard.Key; // P
-    skill1: Phaser.Input.Keyboard.Key; // K
+    skill1?: Phaser.Input.Keyboard.Key; // K
     skill2: Phaser.Input.Keyboard.Key; // I
     heal:   Phaser.Input.Keyboard.Key; // M
     ultimate: Phaser.Input.Keyboard.Key; // L
@@ -216,7 +216,7 @@ export class GameScene extends Phaser.Scene {
         jump:   this.input.keyboard.addKey(KC.SPACE),
         attack: this.input.keyboard.addKey(KC.Z),
         sub:    this.input.keyboard.addKey(KC.F),
-        skill1: this.input.keyboard.addKey(KC.C),
+        // skill1: this.input.keyboard.addKey(KC.C), // Unbound C skill
         skill2: this.input.keyboard.addKey(KC.X),
         heal:   this.input.keyboard.addKey(KC.H),
         ultimate: this.input.keyboard.addKey(KC.E),
@@ -309,7 +309,7 @@ export class GameScene extends Phaser.Scene {
         attack:     Phaser.Input.Keyboard.JustDown(keys.attack),
         attackHold: keys.attack.isDown,
         substitute: Phaser.Input.Keyboard.JustDown(keys.sub),
-        skill1:     Phaser.Input.Keyboard.JustDown(keys.skill1),
+        skill1:     keys.skill1 ? Phaser.Input.Keyboard.JustDown(keys.skill1) : false,
         skill2:     Phaser.Input.Keyboard.JustDown(keys.skill2),
         skill2Hold: keys.skill2.isDown,
         heal:       Phaser.Input.Keyboard.JustDown(keys.heal),

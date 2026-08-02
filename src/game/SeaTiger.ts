@@ -1,6 +1,5 @@
 import { BaseCharacter, type CharacterConfig } from './BaseCharacter';
 import { SeaTigerComboState } from './fsm/states/SeaTigerComboState';
-import { SeaTigerSkill1State } from './fsm/states/SeaTigerSkill1State';
 import { SeaTigerSkill2State } from './fsm/states/SeaTigerSkill2State';
 import { SeaTigerUltimateState } from './fsm/states/SeaTigerUltimateState';
 import { SeaTigerWindState } from './fsm/states/SeaTigerWindState';
@@ -29,7 +28,6 @@ export class SeaTiger extends BaseCharacter {
     // Register SeaTiger specific states
     this.fsm
       .addState(new SeaTigerComboState())
-      .addState(new SeaTigerSkill1State())
       .addState(new SeaTigerSkill2State())
       .addState(new SeaTigerUltimateState())
       .addState(new SeaTigerWindState())
