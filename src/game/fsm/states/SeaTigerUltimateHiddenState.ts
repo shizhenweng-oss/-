@@ -147,7 +147,12 @@ export class SeaTigerUltimateHiddenState implements IState {
             EventBus.emit(EVENTS.UI_CINEMATIC_ULTIMATE, { phase: 4 }); // Survive text
          } else {
             EventBus.emit(EVENTS.UI_CINEMATIC_ULTIMATE, { phase: 6 }); // Die text
-            ctx.takeHit({ damage: 99999, pushbackSpeed: 0, causesKnockdown: true }, 1);
+            ctx.hp = 0;
+            EventBus.emit(EVENTS.PLAYER_HP_CHANGED, {
+               player: ctx.playerId,
+               hp:     ctx.hp,
+               maxHp:  ctx.maxHp,
+            });
          }
       }
     }
