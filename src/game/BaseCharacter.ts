@@ -820,16 +820,7 @@ export class BaseCharacter {
       return true;
     }
     
-    // Auto-trigger Rib Burst Form when HP drops to 20%
-    if (this.hp > 0 && this.hp <= this.maxHp * 0.2) {
-       const st = this as any;
-       if (st.seaTigerData && !st.seaTigerData.isRibBurstForm) {
-          if (this.fsm.hasState(CharacterStateType.ULTIMATE_HIDDEN)) {
-             this.fsm.transition(CharacterStateType.ULTIMATE_HIDDEN);
-             return true;
-          }
-       }
-    }
+
     
     // If already in Rib Burst Form, JustDown of skill2 triggers phase 2
     if (this.input.skill2) {
@@ -950,6 +941,16 @@ export class BaseCharacter {
 
     // Tick FSM
     this.fsm.update(delta);
+
+    // Auto-trigger Rib Burst Form when HP drops to 20%
+    if (this.hp > 0 && this.hp <= this.maxHp * 0.2) {
+       const st = this as any;
+       if (st.seaTigerData && !st.seaTigerData.isRibBurstForm) {
+          if (this.fsm.hasState(CharacterStateType.ULTIMATE_HIDDEN) && this.fsm.currentType !== CharacterStateType.ULTIMATE_HIDDEN) {
+             this.fsm.transition(CharacterStateType.ULTIMATE_HIDDEN);
+          }
+       }
+    }
 
     // Keep active hitbox snapped in front of the character
     if (this.activeHitbox) {

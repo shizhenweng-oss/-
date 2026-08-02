@@ -36,15 +36,14 @@ export class SeaTigerUltimateHiddenState implements IState {
             lifespan: { min: 600, max: 1200 },
             scale: { start: 2.5, end: 0 },
             alpha: { start: 0.7, end: 0 },
-            tint: [0xff0000, 0xff5555, 0xffffff], // Blood red and white steam
+            tint: 0xff0000, // Blood red steam
             blendMode: 'ADD',
-            speedY: { min: -150, max: -500 },
+            speedY: { min: -500, max: -150 },
             speedX: { min: -150, max: 150 }, // Spreads out like a V (hurricane)
             accelerationY: -300,
             frequency: 15, // Very dense
             follow: ctx.rect,
-            followOffset: { x: 0, y: 30 }, // Starts near waist/legs
-            emitZone: { type: 'random', source: new Phaser.Geom.Rectangle(-40, -20, 80, 40) } as any // Base of the hurricane
+            followOffset: { x: 0, y: 30 } // Starts near waist/legs
          });
       }
       
