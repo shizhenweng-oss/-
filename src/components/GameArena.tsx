@@ -58,15 +58,14 @@ export const GameArena: React.FC = () => {
   // ── Round timer ───────────────────────────────────────────────────────────
   const [roundTime, setRoundTime]       = useState(ROUND_DURATION);
   const [roundRunning, setRoundRunning] = useState(true);
+  const [ultimatePhase, setUltimatePhase] = useState<number>(0);
+  const [videoIndex, setVideoIndex] = useState<number>(1);
   const [phase1Text, setPhase1Text] = useState("");
 
   // ── Narration overlay ─────────────────────────────────────────────────────
   const [narration, setNarration] = useState({ text: '', visible: false, imageUrl: '' });
   const [displayedNarration, setDisplayedNarration] = useState('');
   
-  // Ultimate Cinematic State
-  const [ultimatePhase, setUltimatePhase] = useState<number>(0);
-
   // ── Cut-in Text & Buffs ───────────────────────────────────────────────────
   const [cutins, setCutins] = useState<{ id: number; text: string }[]>([]);
   const [buffs, setBuffs] = useState({ p1Thunder: false, p2Thunder: false });
@@ -178,6 +177,8 @@ export const GameArena: React.FC = () => {
         if (i > fullText.length) clearInterval(interval);
       }, 70); // Typwriter speed
       return () => clearInterval(interval);
+    } else if (ultimatePhase === 5) {
+      setVideoIndex(1);
     }
   }, [ultimatePhase]);
 
@@ -483,10 +484,18 @@ export const GameArena: React.FC = () => {
               </div>
             )}
 
-            {/* Phase 5: MP4 Video Playback */}
-            {ultimatePhase === 5 && (
+            {/* Phase 5: MP4 Video Playback Sequence */}
+            {ultimatePhase === 5 && videoIndex === 1 && (
               <video 
                 src="/assets/seatiger_ultimate_1.mp4" 
+                autoPlay 
+                className="absolute inset-0 w-full h-full object-contain bg-black z-[999]"
+                onEnded={() => setVideoIndex(2)}
+              />
+            )}
+            {ultimatePhase === 5 && videoIndex === 2 && (
+              <video 
+                src="/assets/seatiger_ultimate_2.mp4" 
                 autoPlay 
                 className="absolute inset-0 w-full h-full object-contain bg-black z-[999]"
                 onEnded={() => EventBus.emit(EVENTS.UI_CINEMATIC_VIDEO_ENDED)}
