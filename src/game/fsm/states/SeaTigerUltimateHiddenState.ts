@@ -153,13 +153,13 @@ export class SeaTigerUltimateHiddenState implements IState {
     }
     else if (this.phase === 4) {
        if (this.timer > 4000) {
-          ctx.spriteOffsetY = 0; // reset
-          if (ctx.sprite) ctx.sprite.setAngle(0);
+          // Keep him fallen! Do not reset angle or transition to IDLE.
           EventBus.emit(EVENTS.UI_CINEMATIC_ULTIMATE, { phase: 0 }); // clear
-          if (ctx.hp > 0) {
-            ctx.fsm.transition(CharacterStateType.IDLE);
-          }
+          this.phase = 5; // Idle fallen state
        }
+    }
+    else if (this.phase === 5) {
+       // Just lie there. Match is likely over or he's too exhausted to move.
     }
   }
 
