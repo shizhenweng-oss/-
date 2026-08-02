@@ -48,7 +48,7 @@ export class SeaTigerUltimateHiddenState implements IState {
             speedX: { min: -150, max: 150 }, // Spreads out like a V (hurricane)
             accelerationY: -300,
             frequency: 5, // Extremely dense
-            follow: ctx.rect,
+            follow: ctx.hurtbox, // Track the jumping hurtbox!
             followOffset: { x: 0, y: 30 } // Starts near waist/legs
          });
          
