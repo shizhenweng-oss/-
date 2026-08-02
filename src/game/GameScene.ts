@@ -135,7 +135,7 @@ export class GameScene extends Phaser.Scene {
     // ── Background + floor ────────────────────────────────────────────────
     this.bgLayer    = this.add.graphics().setDepth(0);
     this.floorLayer = this.add.graphics().setDepth(1);
-    this.drawBackground(width, height, floorY);
+    this.drawBackground(width, height);
 
     // ── P1 — left side, red ───────────────────────────────────────────────
     this.p1 = new SeaTiger(this, {
@@ -250,10 +250,9 @@ export class GameScene extends Phaser.Scene {
 
     // ── Handle canvas resize ──────────────────────────────────────────────
     this.scale.on('resize', (size: Phaser.Structs.Size) => {
-      const newFloorY = Math.round(size.height * FLOOR_RATIO);
       this.bgLayer.clear();
       this.floorLayer.clear();
-      this.drawBackground(size.width, size.height, newFloorY);
+      this.drawBackground(size.width, size.height);
 
       // Update physics world bounds
       const hw = CHAR_W / 2;
@@ -312,11 +311,12 @@ export class GameScene extends Phaser.Scene {
 
   // ── Drawing helpers ───────────────────────────────────────────────────────
 
-  private drawBackground(w: number, h: number, floorY: number): void {
+  private drawBackground(w: number, h: number): void {
     // Ruined City Background
     if (this.textures.exists('moon_surface')) {
-      const bg = this.add.image(w / 2, h / 2, 'moon_surface');
-      // Scale to cover screen
+      const bg = this.add.image(w / 2, 0, 'moon_surface');
+      bg.setOrigin(0.5, 0); // Align to top to show deep space
+      // Scale to cover screen width
       const scaleX = w / bg.width;
       const scaleY = h / bg.height;
       bg.setScale(Math.max(scaleX, scaleY));
@@ -327,24 +327,8 @@ export class GameScene extends Phaser.Scene {
       this.bgLayer.fillRect(0, 0, w, h);
     }
 
-    // Floor surface
-    this.floorLayer.fillStyle(0x070716, 1);
-    this.floorLayer.fillRect(0, floorY, w, h - floorY);
-
-    // Grid perspective lines on floor
-    this.floorLayer.lineStyle(1, 0x1a2050, 0.6);
-    for (let x = 0; x < w; x += 80) {
-      this.floorLayer.lineBetween(x, floorY, x, h);
-    }
-    for (let y = floorY; y < h; y += 40) {
-      this.floorLayer.lineBetween(0, y, w, y);
-    }
-
-    // Glowing floor edge
-    this.floorLayer.lineStyle(3, 0x3366ff, 0.85);
-    this.floorLayer.lineBetween(0, floorY, w, floorY);
-    this.floorLayer.lineStyle(1, 0x6699ff, 0.25);
-    this.floorLayer.lineBetween(0, floorY + 4, w, floorY + 4);
+    // We don't draw the artificial floor grid and blue line anymore, 
+    // so characters look like they are standing directly on the moon surface!
   }
 
   // ── Environment Destruction ────────────────────────────────────────────────
