@@ -458,8 +458,8 @@ export const GameArena: React.FC = () => {
               </div>
             )}
             
-            {/* Phase 5: Death Ending */}
-            {ultimatePhase === 5 && (
+            {/* Phase 6: Death Ending */}
+            {ultimatePhase === 6 && (
               <div className="absolute inset-0 bg-black flex flex-col items-center justify-center">
                 {/* War Marks */}
                 <div className="absolute flex gap-8 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
@@ -478,9 +478,19 @@ export const GameArena: React.FC = () => {
                     animation: 'slow-fade-out 5s ease-in-out forwards 1.5s',
                   }}
                 >
-                  小瞳…我…未能做到。<br/>首男…我对你不起…
+                  一百万匹力量的代价……<br/>海虎 灰飞烟灭。
                 </div>
               </div>
+            )}
+
+            {/* Phase 5: MP4 Video Playback */}
+            {ultimatePhase === 5 && (
+              <video 
+                src="/assets/seatiger_ultimate_1.mp4" 
+                autoPlay 
+                className="absolute inset-0 w-full h-full object-contain bg-black z-[999]"
+                onEnded={() => EventBus.emit(EVENTS.UI_CINEMATIC_VIDEO_ENDED)}
+              />
             )}
           </div>
         )}

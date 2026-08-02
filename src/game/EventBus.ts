@@ -26,6 +26,7 @@ export const EVENTS = {
   UI_BUFF_EFFECT:       'ui-buff-effect',
   /** { phase: 1 | 2 | 3 | 4 } */
   UI_CINEMATIC_ULTIMATE: 'ui-cinematic-ultimate',
+  UI_CINEMATIC_VIDEO_ENDED: 'ui-cinematic-video-ended',
 } as const;
 
 export type EventPayloads = {
@@ -45,5 +46,6 @@ export type EventPayloads = {
   [EVENTS.PLAY_NARRATION]:       { text: string, imageUrl?: string };
   [EVENTS.UI_TEXT_CUTIN]:        { player: 1 | 2; text: string };
   [EVENTS.UI_BUFF_EFFECT]:       { player: 1 | 2; active: boolean; type: 'thunder'|'ice'|'fire' };
-  [EVENTS.UI_CINEMATIC_ULTIMATE]: { phase: 1 | 2 | 3 | 4 | 0 }; // 0 to clear
+  [EVENTS.UI_CINEMATIC_ULTIMATE]: { phase: 1 | 2 | 3 | 4 | 5 | 6 | 0 }; // 0 to clear
+  [EVENTS.UI_CINEMATIC_VIDEO_ENDED]: void;
 };
