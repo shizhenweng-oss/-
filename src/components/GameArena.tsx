@@ -382,8 +382,37 @@ export const GameArena: React.FC = () => {
               </div>
             )}
             
-            {/* Phase 3: Survival Ending */}
+            {/* Phase 3: Moon Shatter Cinematic */}
             {ultimatePhase === 3 && (
+              <div className="absolute inset-0 bg-black flex flex-col items-center justify-center">
+                {/* Intense full screen red flash */}
+                <div className="absolute inset-0 bg-red-600 z-10" style={{ animation: 'screen-crack 0.5s ease-out forwards' }} />
+                
+                {/* Moon Shatter Image */}
+                <div 
+                  className="absolute inset-0 z-20 bg-cover bg-no-repeat bg-center opacity-0 mix-blend-screen"
+                  style={{ 
+                    backgroundImage: 'url(/assets/ultimate_blast.jpg)',
+                    animation: 'image-zoom-fade 2.5s ease-out forwards 0.2s'
+                  }}
+                />
+                
+                {/* Shatter Text */}
+                <div 
+                  className="z-30 text-white font-black italic text-8xl md:text-[8rem] text-center leading-none opacity-0 tracking-tighter"
+                  style={{ 
+                    animation: 'ultimate-fade-text 2.5s ease-in-out forwards 0.3s',
+                    textShadow: '0 0 50px #ff0000, 0 0 100px #ffaa00',
+                    WebkitTextStroke: '4px #000'
+                  }}
+                >
+                  轰碎月球！<br/>灰飞烟灭！！
+                </div>
+              </div>
+            )}
+
+            {/* Phase 4: Survival Ending */}
+            {ultimatePhase === 4 && (
               <div className="absolute inset-0 bg-black flex items-center justify-center">
                 {/* War Marks */}
                 <div className="absolute flex gap-8 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
@@ -413,8 +442,8 @@ export const GameArena: React.FC = () => {
               </div>
             )}
             
-            {/* Phase 4: Death Ending */}
-            {ultimatePhase === 4 && (
+            {/* Phase 5: Death Ending */}
+            {ultimatePhase === 5 && (
               <div className="absolute inset-0 bg-black flex flex-col items-center justify-center">
                 {/* War Marks */}
                 <div className="absolute flex gap-8 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">

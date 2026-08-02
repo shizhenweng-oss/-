@@ -25,11 +25,17 @@ export class SeaTigerUltimateHiddenState implements IState {
       // Permanently set Rib Burst
       if (st.seaTigerData) {
          st.seaTigerData.isRibBurstForm = true;
+         if (ctx.spritesConfig) {
+            ctx.spritesConfig.idle = 'sea_tiger_rib_burst';
+            ctx.spritesConfig.punch = 'sea_tiger_rib_burst';
+            ctx.spritesConfig.ultimate = 'sea_tiger_rib_burst';
+         }
          // Set texture to rib burst
-         if (ctx.sprite) ctx.sprite.setTexture('sea_tiger_rib_burst');
-         // We might need to override the pose logic so it doesn't change back
-         // For now, setting the texture and locking it is best handled in setPose, 
-         // but since it's a static image, we can just let it stay.
+         if (ctx.sprite) {
+            ctx.sprite.setTexture('sea_tiger_rib_burst');
+            ctx.sprite.setAngle(0);
+            ctx.sprite.setOrigin(0.5, 0.5);
+         }
 
          // Add persistent blood steam hurricane emitter
          st.seaTigerData.ribBurstEmitter = ctx.scene.add.particles(0, 0, 'spark', {
@@ -86,27 +92,29 @@ export class SeaTigerUltimateHiddenState implements IState {
         ctx.scene.physics.resume();
         
         if (ctx.opponent) {
-           ctx.scene.cameras.main.shake(1000, 0.05);
-           ctx.spawnShockwave(ctx.opponent.rect.x, ctx.opponent.rect.y, 0xff0000, 5.0);
+           ctx.scene.cameras.main.shake(2000, 0.1); // Massive Shake
+           ctx.spawnShockwave(ctx.opponent.rect.x, ctx.opponent.rect.y, 0xff0000, 10.0);
            
            ctx.scene.add.particles(ctx.opponent.rect.x, ctx.opponent.rect.y, 'spark', {
               lifespan: 1000,
-              scale: { start: 10, end: 0 },
+              scale: { start: 15, end: 0 },
               alpha: { start: 1, end: 0 },
               tint: [0xff0000, 0xffaa00, 0xffffff],
               blendMode: 'ADD',
-              speed: { min: 800, max: 2500 },
-              quantity: 200,
-              duration: 100
+              speed: { min: 1000, max: 3500 },
+              quantity: 400,
+              duration: 200
            });
            
+           // Emit Phase 3 UI (Moon Shatter)
+           EventBus.emit(EVENTS.UI_CINEMATIC_ULTIMATE, { phase: 3 });
            ctx.opponent.takeHit({ damage: 99999, pushbackSpeed: 3000, causesKnockdown: true }, ctx.facingRight ? 1 : -1);
         }
       }
     }
     else if (this.phase === 3) {
-       // Wait a moment for explosion, then RNG Ending
-       if (this.timer >= 1500 && !this.impactDealt) {
+       // Wait for Moon Shatter UI to finish (3s)
+       if (this.timer >= 3000 && !this.impactDealt) {
           this.impactDealt = true;
           this.phase = 4;
           this.timer = 0;
@@ -117,20 +125,24 @@ export class SeaTigerUltimateHiddenState implements IState {
              st.seaTigerData.ribBurstEmitter = null;
           }
           
-          ctx.setPose('idle');
+          // Fall to the ground (lying pose)
+          if (ctx.sprite) {
+             ctx.sprite.setAngle(ctx.facingRight ? -90 : 90);
+             ctx.sprite.setOrigin(0.5, 0.2); // Shift down visually
+          }
           ctx.setBodyTint(0x555555); // Exhausted
           
           const rng = Math.random();
           if (rng < 0.1) {
-             EventBus.emit(EVENTS.UI_CINEMATIC_ULTIMATE, { phase: 3 }); // Survive
+             EventBus.emit(EVENTS.UI_CINEMATIC_ULTIMATE, { phase: 4 }); // Survive text
           } else {
-             EventBus.emit(EVENTS.UI_CINEMATIC_ULTIMATE, { phase: 4 }); // Die
+             EventBus.emit(EVENTS.UI_CINEMATIC_ULTIMATE, { phase: 5 }); // Die text
              ctx.takeHit({ damage: 99999, pushbackSpeed: 0, causesKnockdown: true }, 1);
           }
        }
     }
     else if (this.phase === 4) {
-       if (this.timer > 6500) {
+       if (this.timer > 4000) {
           EventBus.emit(EVENTS.UI_CINEMATIC_ULTIMATE, { phase: 0 }); // clear
           if (ctx.hp > 0) {
             ctx.fsm.transition(CharacterStateType.IDLE);
