@@ -820,19 +820,15 @@ export class BaseCharacter {
       return true;
     }
     
-    if (this.input.skill2Hold) {
-      if (this.skill2HoldTime > 800 && this.hp <= this.maxHp * 0.2) {
-         const st = this as any;
-         if (st.seaTigerData && !st.seaTigerData.isRibBurstForm) {
-            if (this.fsm.hasState(CharacterStateType.ULTIMATE_HIDDEN)) {
-               this.fsm.transition(CharacterStateType.ULTIMATE_HIDDEN);
-               this.skill2HoldTime = 0;
-               return true;
-            }
-         }
-      }
-    } else {
-      this.skill2HoldTime = 0;
+    // Auto-trigger Rib Burst Form when HP drops to 20%
+    if (this.hp > 0 && this.hp <= this.maxHp * 0.2) {
+       const st = this as any;
+       if (st.seaTigerData && !st.seaTigerData.isRibBurstForm) {
+          if (this.fsm.hasState(CharacterStateType.ULTIMATE_HIDDEN)) {
+             this.fsm.transition(CharacterStateType.ULTIMATE_HIDDEN);
+             return true;
+          }
+       }
     }
     
     // If already in Rib Burst Form, JustDown of skill2 triggers phase 2
