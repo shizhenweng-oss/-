@@ -293,6 +293,7 @@ export class GameScene extends Phaser.Scene {
     // Override P2 input with AI
     if (this.enemyAI) {
       this.p2.input = this.enemyAI.update(time, delta);
+      // console.log("P2 Input:", this.p2.input.moveLeft, this.p2.input.moveRight);
     }
     this.p1.update(delta);
     this.p2.update(delta);
