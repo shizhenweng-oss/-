@@ -149,6 +149,9 @@ export class BaseCharacter {
   // ── 2.5D Physics ────────────────────────────────────────────────────────
   z: number = 0;   // Height above ground
   vz: number = 0;  // Z-axis velocity
+  
+  spriteOffsetX: number = 0;
+  spriteOffsetY: number = 0;
   shadow: Phaser.GameObjects.Ellipse;
 
   /** True while Cellular Reconstruction i-frames are active. */
@@ -921,10 +924,6 @@ export class BaseCharacter {
 
     // Sync visuals with physics (Y is visual, rect.y is ground projection)
     this.shadow.setPosition(this.rect.x, this.rect.y + this.height / 2);
-    if (this.sprite) {
-      // Custom visual offset: move sprite up by Z
-      this.sprite.setPosition(this.rect.x, this.rect.y - this.z);
-    }
     
     // Timers run first — takeHit() checks isInvulnerable immediately
     this._tickTimers(delta);
@@ -936,6 +935,10 @@ export class BaseCharacter {
 
     // Sync sprite to rect
     if (this.sprite) {
+      this.sprite.setPosition(
+        this.rect.x + this.spriteOffsetX, 
+        this.rect.y - this.z + this.spriteOffsetY
+      );
       this.sprite.setFlipX(!this.facingRight);
     }
 

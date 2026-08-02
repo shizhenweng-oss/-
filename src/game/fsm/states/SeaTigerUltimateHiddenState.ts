@@ -51,6 +51,9 @@ export class SeaTigerUltimateHiddenState implements IState {
             follow: ctx.rect,
             followOffset: { x: 0, y: 30 } // Starts near waist/legs
          });
+         
+         // Spotlight / Dim background
+         st.seaTigerData.dimBg = ctx.scene.add.rectangle(0, 0, 9999, 9999, 0x000000, 0.8).setOrigin(0, 0).setDepth(9);
       }
       
       EventBus.emit(EVENTS.UI_CINEMATIC_ULTIMATE, { phase: 1 });
@@ -77,8 +80,17 @@ export class SeaTigerUltimateHiddenState implements IState {
     ctx.setVelocityX(0);
 
     if (this.phase === 1) {
+      // Violent shake
+      ctx.spriteOffsetX = (Math.random() - 0.5) * 20;
+
       // Stay in Phase 1 for 4 seconds to let UI text grow
       if (this.timer > 4000) {
+        ctx.spriteOffsetX = 0;
+        const st = ctx as any;
+        if (st.seaTigerData?.dimBg) {
+           st.seaTigerData.dimBg.destroy();
+           st.seaTigerData.dimBg = null;
+        }
         EventBus.emit(EVENTS.UI_CINEMATIC_ULTIMATE, { phase: 0 }); // clear UI
         ctx.fsm.transition(CharacterStateType.IDLE);
       }
@@ -99,7 +111,7 @@ export class SeaTigerUltimateHiddenState implements IState {
               lifespan: 1000,
               scale: { start: 15, end: 0 },
               alpha: { start: 1, end: 0 },
-              tint: [0xff0000, 0xffaa00, 0xffffff],
+              tint: 0xff0000, // SOLID RED TO PREVENT CRASH
               blendMode: 'ADD',
               speed: { min: 1000, max: 3500 },
               quantity: 400,
@@ -128,7 +140,7 @@ export class SeaTigerUltimateHiddenState implements IState {
           // Fall to the ground (lying pose)
           if (ctx.sprite) {
              ctx.sprite.setAngle(ctx.facingRight ? -90 : 90);
-             ctx.sprite.setOrigin(0.5, 0.2); // Shift down visually
+             ctx.spriteOffsetY = ctx.sprite.displayHeight / 2; // Shift down visually
           }
           ctx.setBodyTint(0x555555); // Exhausted
           
@@ -143,6 +155,8 @@ export class SeaTigerUltimateHiddenState implements IState {
     }
     else if (this.phase === 4) {
        if (this.timer > 4000) {
+          ctx.spriteOffsetY = 0; // reset
+          if (ctx.sprite) ctx.sprite.setAngle(0);
           EventBus.emit(EVENTS.UI_CINEMATIC_ULTIMATE, { phase: 0 }); // clear
           if (ctx.hp > 0) {
             ctx.fsm.transition(CharacterStateType.IDLE);
@@ -152,6 +166,14 @@ export class SeaTigerUltimateHiddenState implements IState {
   }
 
   exit(ctx: BaseCharacter): void {
+    ctx.spriteOffsetX = 0;
+    ctx.spriteOffsetY = 0;
+    if (ctx.sprite) ctx.sprite.setAngle(0);
+    const st = ctx as any;
+    if (st.seaTigerData?.dimBg) {
+       st.seaTigerData.dimBg.destroy();
+       st.seaTigerData.dimBg = null;
+    }
     ctx.scene.physics.resume();
   }
 }

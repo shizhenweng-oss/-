@@ -58,6 +58,7 @@ export const GameArena: React.FC = () => {
   // ── Round timer ───────────────────────────────────────────────────────────
   const [roundTime, setRoundTime]       = useState(ROUND_DURATION);
   const [roundRunning, setRoundRunning] = useState(true);
+  const [phase1Text, setPhase1Text] = useState("");
 
   // ── Narration overlay ─────────────────────────────────────────────────────
   const [narration, setNarration] = useState({ text: '', visible: false, imageUrl: '' });
@@ -164,6 +165,21 @@ export const GameArena: React.FC = () => {
     const id = setInterval(() => setRoundTime(t => Math.max(0, t - 1)), 1_000);
     return () => clearInterval(id);
   }, [roundRunning, roundTime]);
+
+  // ── Phase 1 Typewriter ──────────────────────────────────────────────────
+  useEffect(() => {
+    if (ultimatePhase === 1) {
+      const fullText = "他媽的…現在，已是去盡的時候。\n已他媽不能再忍耐！\n100萬匹力量…出來！！！";
+      let i = 0;
+      setPhase1Text("");
+      const interval = setInterval(() => {
+        setPhase1Text(fullText.slice(0, i));
+        i++;
+        if (i > fullText.length) clearInterval(interval);
+      }, 70); // Typwriter speed
+      return () => clearInterval(interval);
+    }
+  }, [ultimatePhase]);
 
   const isUrgent  = roundTime <= 10;
 
@@ -329,7 +345,7 @@ export const GameArena: React.FC = () => {
         {/* ULTIMATE CINEMATIC OVERLAY */}
         {ultimatePhase > 0 && (
           <div className="pointer-events-none absolute inset-0 z-50 flex items-center justify-center overflow-hidden">
-            {/* Phase 1: Text scale up */}
+            {/* Phase 1: Text scale up with Typewriter */}
             {ultimatePhase === 1 && (
               <div 
                 className="text-red-600 font-black italic text-center whitespace-pre-wrap leading-tight drop-shadow-[0_0_20px_rgba(255,0,0,1)]"
@@ -339,7 +355,7 @@ export const GameArena: React.FC = () => {
                   fontSize: '4rem'
                 }}
               >
-                他媽的…現在，已是去盡的時候。<br/>已他媽不能再忍耐！<br/>100萬匹力量…出來！！！
+                {phase1Text}
               </div>
             )}
             
